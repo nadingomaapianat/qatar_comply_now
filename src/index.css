@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Brand Colors - Cyber Green */
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+  --color-brand-900: #14532d;
+  --color-brand-950: #052e16;
+
+  /* Extending Slate for Dark Mode */
+  --color-slate-850: #1e293b;
+  --color-slate-950: #020617; 
+}
+
+/* Layer base */
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-50; /* Dark Mode Base */
+  }
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+/* Utilities */
+@utility glass-panel {
+  @apply bg-slate-900/70 backdrop-blur-lg border border-white/10 shadow-xl;
+}
+
+@utility glass-card {
+  @apply bg-slate-800/50 backdrop-blur-md border border-slate-700/50 shadow-lg hover:shadow-brand-500/10 hover:border-brand-500/30 transition-all duration-300;
+}
+
+@utility glow-point {
+  @apply absolute rounded-full blur-3xl opacity-20 pointer-events-none;
+}
