@@ -1,16 +1,22 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20
+# Use Alpine for a lighter, faster build image
+FROM node:20-alpine
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy everything from the repository to the container
+# 1. Cache Layer: Copy package files ONLY first.
+
+COPY package.json package-lock.json ./
+
+# 2. Install Dependencies
+
+RUN npm ci --legacy-peer-deps
+
+# 3. Copy the rest of the source code
 COPY . .
 
-RUN npm install --force
+# 4. Build the Static Assets
 
-# Expose the port the app runs on
-EXPOSE 5173
+RUN npm run build
 
-# Start the application
-CMD ["npm", "run", "dev"]
+CMD ["echo", "Build success. Ready for artifact extraction."]
