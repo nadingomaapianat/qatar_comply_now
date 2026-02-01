@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as generateUUID } from 'uuid';
 import { euCountries } from "./countries";
 
+
 // Helper function to get country code from country name
 const getCountryCode = (countryName: string): string | undefined => {
   const country = euCountries.find(c => c.name.toLowerCase() === countryName.toLowerCase());
