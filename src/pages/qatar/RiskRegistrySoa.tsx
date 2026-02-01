@@ -292,7 +292,7 @@ const RiskRegistrySoa = () => {
             See how comply.now can help you maintain a dynamic risk register and auto-updated SOA.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/qatar/contact" className="btn-gradient px-8 py-4 rounded-xl text-white font-medium inline-flex items-center gap-2">
+            <Link to="/auth/register" className="btn-gradient px-8 py-4 rounded-xl text-white font-medium inline-flex items-center gap-2">
               Start Your Assessment <ArrowRight size={18} />
             </Link>
             <Link to="/qatar/pricing" className="btn-glass px-8 py-4 rounded-xl font-medium">

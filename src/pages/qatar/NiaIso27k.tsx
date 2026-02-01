@@ -93,7 +93,7 @@ const NiaIso27k = () => {
 
             <div className="flex flex-wrap gap-4">
               <Link
-                to="/auth/register"
+                to="/qatar/contact"
                 className="inline-flex items-center gap-2 btn-gradient px-6 py-3 rounded-xl text-white font-medium"
               >
                 Request Demo <ArrowRight size={18} />
@@ -309,7 +309,7 @@ const NiaIso27k = () => {
             See how comply.now can help you achieve and maintain ISO 27001 and NIA compliance.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/qatar/contact" className="btn-gradient px-8 py-4 rounded-xl text-white font-medium inline-flex items-center gap-2">
+            <Link to="/auth/register" className="btn-gradient px-8 py-4 rounded-xl text-white font-medium inline-flex items-center gap-2">
               Start Your Assessment <ArrowRight size={18} />
             </Link>
             <Link to="/qatar/pricing" className="btn-glass px-8 py-4 rounded-xl font-medium">

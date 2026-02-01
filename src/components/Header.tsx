@@ -60,7 +60,7 @@ const Header = () => {
             <button
               type="button"
               className="btn-gradient px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-white"
-              onClick={() => navigate('/auth/register')}
+              onClick={() => navigate('/qatar/contact')}
             >
               Request Demo
             </button>
@@ -101,7 +101,7 @@ const Header = () => {
                     className="btn-glass px-4 py-3 rounded-xl text-base font-medium text-foreground w-full"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      navigate('/login');
+                      navigate('/auth/register');
                     }}
                   >
                     Login
@@ -112,7 +112,7 @@ const Header = () => {
                   className="btn-gradient px-4 py-3 rounded-xl text-base font-medium text-white w-full"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate('/auth/register');
+                    navigate('/qatar/contact');
                   }}
                 >
                   Request Demo
