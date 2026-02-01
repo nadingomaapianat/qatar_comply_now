@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { RegistrationStepper } from '@/components/ui/stepper';
 import { useRegistration, REGISTRATION_STEPS } from '@/context/RegistrationContext';
 import Header from '@/components/Header';
+import Logo from '@/components/Logo';
 import ParticleField from '@/components/animations/ParticleField';
 
 interface StepperLayoutProps {
@@ -85,7 +86,7 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
               <div className="flex items-center space-x-4">
                 <h3 className="text-xl font-bold text-[#003399]">EG.Portal</h3>
                 <Badge className="bg-[#14B8A6] text-white border-none">Egypt Edition</Badge>
-                <img src="/Comply now logo.png" alt="Comply now logo" className="h-8 w-auto" />
+                <Logo className="h-8 w-auto" linkToHome={false} />
               </div>
               {currentStep && (
                 <div className="text-right">
@@ -98,18 +99,27 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
         </header>
       )}
 
-      {showStepper && currentStep && (
+      {(showStepper && currentStep) || (isLanding && !showHeader) ? (
         <div className={`relative z-10 ${isLanding ? 'glass border-b border-border' : 'bg-white border-b border-gray-100'}`}>
           <div className="container mx-auto px-4 sm:px-6 py-3">
-            <RegistrationStepper
-              currentStep={currentStep}
-              onStepClick={handleStepClick}
-              variant={isLanding ? 'dark' : 'default'}
-              className="max-w-4xl mx-auto"
-            />
+            <div className="flex items-center max-w-6xl mx-auto">
+              <div className="shrink-0 pl-5">
+                <Logo className="h-20 w-auto sm:h-24 md:h-28 lg:h-32" />
+              </div>
+              {showStepper && currentStep && (
+                <div className="flex-1 flex justify-center min-w-0">
+                  <RegistrationStepper
+                    currentStep={currentStep}
+                    onStepClick={handleStepClick}
+                    variant={isLanding ? 'dark' : 'default'}
+                    className="w-full max-w-4xl"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       <main className={`flex-1 relative z-10 flex flex-col min-h-0 ${isLanding && showHeader ? 'pt-32' : isLanding ? 'pt-4' : ''}`}>
         <div className="container mx-auto px-4 sm:px-6 py-4 flex-1 flex flex-col min-h-0">
@@ -197,11 +207,7 @@ export const CompactStepperLayout: React.FC<StepperLayoutProps> = ({
       <header className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <img 
-              src="/Comply now logo.png" 
-              alt="Comply now logo" 
-              className="h-6 w-auto"
-            />
+            <Logo className="h-6 w-auto" linkToHome={false} />
             <h3 className="text-lg font-bold text-[#003399]">EG.Portal</h3>
           </div>
           {currentStep && (

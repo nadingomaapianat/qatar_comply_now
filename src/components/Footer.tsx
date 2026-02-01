@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '@/assets/logo.png';
+import Logo from '@/components/Logo';
 
 const Footer = () => {
   return (
@@ -8,13 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4 group">
-              <img
-                src={logo}
-                alt="comply.now logo"
-                className="h-24 md:h-28 lg:h-32 xl:h-36 w-auto transition-transform duration-300 group-hover:scale-105"
-              />
-            </Link>
+            <div className="mb-4">
+              <Logo className="h-28 md:h-32 lg:h-36 xl:h-40 w-auto transition-transform duration-300 hover:scale-105" />
+            </div>
             <p className="text-sm text-muted-foreground">
               Transforming regulatory compliance into your competitive advantage for Qatar.
             </p>

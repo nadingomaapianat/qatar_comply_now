@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useRegistration, REGISTRATION_STEPS } from "@/context/RegistrationContext";
 import { getRegistrationStatus } from "../../services/steperService";
 import { Loader2 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 function applyStatusAndNavigate(
   data: { step: string; email?: string; token?: string; personalInfo?: any; organizationInfo?: any; objectiveInfo?: any },
@@ -126,7 +127,10 @@ export default function RegisterStatusPage() {
   // Show loading state while context is restoring
   if (isRestoring) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F2F4F7]">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F2F4F7] p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 text-[#14B8A6] animate-spin mx-auto" />
           <h4 className="text-xl font-semibold text-gray-700">Restoring your progress</h4>
@@ -152,8 +156,11 @@ export default function RegisterStatusPage() {
   // Show error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F2F4F7]">
-        <div className="text-center space-y-4 max-w-md mx-auto p-6">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F2F4F7] p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
+        <div className="text-center space-y-4 max-w-md mx-auto">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />

@@ -5,6 +5,7 @@ import { getRegistrationPasswordResetStatus, resetRegistrationPassword } from ".
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Logo from "@/components/Logo";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -56,14 +57,31 @@ export default function ResetPasswordPage() {
   };
 
   if (loading && tokenValid === null) {
-    return <div className="max-w-md mx-auto mt-20 p-6 text-center">Checking token...</div>;
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
+        <p className="text-center">Checking token...</p>
+      </div>
+    );
   }
   if (tokenValid === false) {
-    return <div className="max-w-md mx-auto mt-20 p-6 text-center text-red-600">{error || "Invalid or expired token."}</div>;
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
+        <p className="text-center text-red-600">{error || "Invalid or expired token."}</p>
+      </div>
+    );
   }
 
   return (
-   <div className="min-h-screen bg-gradient-to-br from-[#F2F4F7] to-white flex items-center justify-center p-6">
+   <div className="min-h-screen bg-gradient-to-br from-[#F2F4F7] to-white flex flex-col items-center justify-center p-6">
+      <div className="mb-6">
+        <Logo className="h-12 w-auto" />
+      </div>
       <div className="w-full max-w-md">
         <Card className="border-none shadow-lg">
           <CardHeader className="text-center pb-6">

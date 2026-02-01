@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Mail, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { requestRegistrationPasswordReset } from "@/services/userServicer";
+import Logo from "@/components/Logo";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -52,11 +53,7 @@ export default function Login() {
           <CardHeader className="text-center pb-6">
             {/* Logo above Welcome Back */}
             <div className="mb-4 flex justify-center">
-              <img 
-                src="/Comply now logo.png" 
-                alt="Comply now logo" 
-                className="h-12 w-auto"
-              />
+              <Logo className="h-12 w-auto" />
             </div>
             <CardTitle className="text-2xl font-bold text-[#003399] mb-2">
               Welcome Back

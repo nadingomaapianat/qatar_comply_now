@@ -5,6 +5,7 @@ import { CheckCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useRegistration, REGISTRATION_STEPS } from '@/context/RegistrationContext';
+import Logo from "@/components/Logo";
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -71,7 +72,10 @@ export default function VerifyEmailPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex min-h-screen flex-col items-center justify-center p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
         <p>Verifying your email...</p>
       </div>
     );
@@ -79,7 +83,10 @@ export default function VerifyEmailPage() {
 
   if (status === "expired") {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
         <Card className="w-full max-w-md shadow-md">
           <CardHeader>
             <AlertTriangle className="w-12 h-12 text-red-600 mb-2 mx-auto" />
@@ -100,7 +107,10 @@ export default function VerifyEmailPage() {
 
   if (status === "error") {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
         <Card className="w-full max-w-md shadow-md">
           <CardHeader>
             <AlertTriangle className="w-12 h-12 text-yellow-500 mb-2 mx-auto" />
@@ -122,7 +132,10 @@ export default function VerifyEmailPage() {
   // Only render verification UI if step is email_sent
   if (status === "email_sent") {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+        <div className="mb-6">
+          <Logo className="h-12 w-auto" />
+        </div>
         <Card className="w-full max-w-md shadow-md">
           <CardHeader>
             <CheckCircle className="w-12 h-12 text-blue-600 mb-2 mx-auto" />

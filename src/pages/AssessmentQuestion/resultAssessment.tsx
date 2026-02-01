@@ -1,5 +1,6 @@
 import React from "react";
 import { AlertTriangle } from "lucide-react";
+import Logo from "@/components/Logo";
 
 // Placeholder chart components (replace with your chart library, e.g., Chart.js, Recharts, etc.)
 const DonutChart = () => (
@@ -47,6 +48,9 @@ const ResultAssessment = () => {
   return (
     <div className="min-h-screen bg-[#F2F4F7] p-6">
       <div className="max-w-6xl mx-auto">
+        <div className="mb-6 flex justify-center">
+          <Logo className="h-12 w-auto" />
+        </div>
         {/* Header and completion section */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#003399] mb-2">Assessment Results</h1>

@@ -5,12 +5,28 @@ function getToken(): string | null {
   return localStorage.getItem("token") || localStorage.getItem("accessToken");
 }
 
+/** Parse response as JSON; if server returns HTML (e.g. 404/index), throw a clear error. */
+async function parseJsonResponse(response: Response): Promise<any> {
+  const text = await response.text();
+  const trimmed = text.trim();
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error("Invalid JSON from server.");
+    }
+  }
+  throw new Error(
+    "Server returned an error page instead of data. Please ensure the API backend is running (e.g. on the configured port) and try again."
+  );
+}
+
 async function getCsrfToken(): Promise<string> {
   const response = await fetch(`${API_BASE_URL}/csrf/token`, {
     method: "GET",
     credentials: "include",
   });
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data.csrfToken;
 }
 
@@ -29,7 +45,7 @@ export async function initiateRegistration(email: string): Promise<any> {
     body: JSON.stringify({ email }),
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 
@@ -52,14 +68,14 @@ export async function getRegistrationStatus(token: string): Promise<any> {
       const text = await response.text();
       let data: any;
       try {
-        data = text ? JSON.parse(text) : {};
+        data = text && (text.trim().startsWith("{") || text.trim().startsWith("[")) ? JSON.parse(text) : {};
       } catch {
         data = { message: "Invalid response from server" };
       }
       throw new Error(data?.message || `Server error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     return data;
   } catch (err) {
     if (err instanceof TypeError && err.message === "Failed to fetch") {
@@ -84,7 +100,7 @@ export async function verifyEmail(token: string): Promise<any> {
     },
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 
@@ -110,7 +126,7 @@ export async function submitPersonalInfo(
     body: JSON.stringify(payload),
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 
@@ -138,7 +154,7 @@ export async function submitOrganizationInfo(token: string, payload: {
     body: JSON.stringify(payload),
   });
 
-  const result = await response.json();
+  const result = await parseJsonResponse(response);
   return result;
 }
 
@@ -157,7 +173,7 @@ export async function submitObjectiveInfo(token: string, data: any[]): Promise<a
     body: JSON.stringify({ data }),
   });
 
-  const result = await response.json();
+  const result = await parseJsonResponse(response);
 
   if (result.isSuccess && result.data?.token) {
     localStorage.setItem("token", result.data.token);
@@ -181,7 +197,7 @@ export async function resendRegistrationEmail(token: string): Promise<any> {
     },
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 // start assessment
@@ -197,7 +213,7 @@ export async function startAssessment(token: string): Promise<any> {
     },
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 
@@ -214,7 +230,7 @@ export async function endAssessment(token: string): Promise<any> {
     },
   });
 
-  const data = await response.json();
+  const data = await parseJsonResponse(response);
   return data;
 }
 
