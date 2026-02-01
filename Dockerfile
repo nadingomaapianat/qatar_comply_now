@@ -16,8 +16,11 @@ RUN npm run build
 # ========== Stage 2: Serve ==========
 FROM nginx:alpine
 
-# Copy built assets from builder
+# Copy built assets from builder (nginx serves from here)
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Also copy to /app/dist for CI/Jenkins: docker cp <container>:/app/dist/. <host>
+COPY --from=builder /app/dist /app/dist
 
 # SPA: serve index.html for client-side routes (e.g. /qatar/sector)
 RUN echo 'server { \
