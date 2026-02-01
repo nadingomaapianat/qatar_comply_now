@@ -1,14 +1,14 @@
-let BASE_URL = import.meta.env.VITE_APP_URL;
+import { API_BASE_URL } from "@/lib/api";
 
 async function getCsrfToken(): Promise<string> {
-    const response = await fetch(`${BASE_URL}/csrf/token`, { method: "GET", credentials: "include" });
+    const response = await fetch(`${API_BASE_URL}/csrf/token`, { method: "GET", credentials: "include" });
     const data = await response.json();
     return data.csrfToken;
   }
 
 export async function sendMagicLinkEmail(email: string) {
   try {
-    const response = await fetch(`${BASE_URL}/auth/send-magic-link`, {
+    const response = await fetch(`${API_BASE_URL}/auth/send-magic-link`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -38,7 +38,7 @@ export async function submitProfileCompletion(data: {
   email: string;
 }) {
   try {
-    const response = await fetch(`${BASE_URL}/auth/save-profile-data`, {
+    const response = await fetch(`${API_BASE_URL}/auth/save-profile-data`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export async function submitProfileCompletion(data: {
 
 export async function verifyMagicToken(token: string) {
   try {
-    const response = await fetch(`${BASE_URL}/auth/verify-magic-token?token=${token}`, {
+    const response = await fetch(`${API_BASE_URL}/auth/verify-magic-token?token=${token}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export async function verifyMagicToken(token: string) {
 
 export async function registerUser(registerData: any) {
   try {
-    const response = await fetch(`${BASE_URL}/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export async function registerUser(registerData: any) {
 export async function linkedinLogin(code: string) {
  
  
-  const response = await fetch(`${BASE_URL}/auth/linkedin/callback?code=${code}`, {
+  const response = await fetch(`${API_BASE_URL}/auth/linkedin/callback?code=${code}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -135,7 +135,7 @@ export async function getReferences() {
             "X-CSRF-TOKEN": await getCsrfToken(),
            
         };
-        const response = await fetch(`${BASE_URL}/control-references/control-reference-register`, {
+        const response = await fetch(`${API_BASE_URL}/control-references/control-reference-register`, {
             method: "GET", 
             credentials: "include",
             headers,
