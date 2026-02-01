@@ -1,30 +1,20 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Use Alpine for a lighter, faster build image
+FROM node:20-alpine
 
+# Set the working directory
 WORKDIR /app
 
-# Install dependencies from lockfile
+# 1. Optimize Caching: Copy package files first
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts --legacy-peer-deps
 
-# Copy source and build
+# 2. Install Dependencies
+# We use 'npm ci' for a clean, deterministic install
+RUN npm ci --legacy-peer-deps
+
+# 3. Copy the rest of the source code
 COPY . .
-RUN npm run build
 
-# Production stage: serve static files
-FROM nginx:alpine
+RUN npx vite build
 
-# Copy built assets from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Optional: custom nginx config for SPA routing (e.g. React Router)
-RUN echo 'server { \
-  listen 3000; \
-  root /usr/share/nginx/html; \
-  index index.html; \
-  location / { try_files $uri $uri/ /index.html; } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 3000
-
-CMD ["nginx", "-g", "daemon off;"]
+# 5. Dummy Command for the Artifact Builder pattern
+CMD ["echo", "Build success. Ready for artifact extraction."]
