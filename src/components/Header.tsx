@@ -24,7 +24,7 @@ const Header = () => {
             <img 
               src={logo} 
               alt="comply.now logo" 
-              className="h-20 md:h-24 lg:h-28 xl:h-32 w-auto transition-transform duration-300 group-hover:scale-105"
+              className="h-28 md:h-32 lg:h-36 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
