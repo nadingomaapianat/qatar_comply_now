@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -47,10 +48,18 @@ const Header = () => {
 
           {/* CTA Buttons - Better spacing */}
           <div className="hidden md:flex items-center gap-4 lg:gap-5">
-            <button className="btn-glass px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-foreground">
+            <button
+              type="button"
+              className="btn-glass px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-foreground"
+              onClick={() => navigate('/auth/register')}
+            >
               Login
             </button>
-            <button className="btn-gradient px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-white">
+            <button
+              type="button"
+              className="btn-gradient px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-white"
+              onClick={() => navigate('/auth/register')}
+            >
               Request Demo
             </button>
           </div>
@@ -84,10 +93,24 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <button className="btn-glass px-4 py-3 rounded-xl text-base font-medium text-foreground w-full">
+                <button
+                  type="button"
+                  className="btn-glass px-4 py-3 rounded-xl text-base font-medium text-foreground w-full"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/auth/register');
+                  }}
+                >
                   Login
                 </button>
-                <button className="btn-gradient px-4 py-3 rounded-xl text-base font-medium text-white w-full">
+                <button
+                  type="button"
+                  className="btn-gradient px-4 py-3 rounded-xl text-base font-medium text-white w-full"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate('/auth/register');
+                  }}
+                >
                   Request Demo
                 </button>
               </div>
