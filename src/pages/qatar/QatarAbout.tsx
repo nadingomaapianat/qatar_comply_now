@@ -124,7 +124,7 @@ const QatarAbout = () => {
         <AnimatedSection variant="light" className="py-20">
           <div className="section-container">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Qatar Team</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Leadership Team</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Experienced professionals dedicated to your compliance success
               </p>
