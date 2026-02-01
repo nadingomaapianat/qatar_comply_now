@@ -74,6 +74,13 @@
 }
 
 @layer components {
+  /* Chart axis/legend text: gray instead of dark (overrides Recharts defaults) */
+  [data-chart] .recharts-cartesian-axis-tick-value,
+  [data-chart] .recharts-cartesian-axis-tick text,
+  [data-chart] .recharts-legend-item-text {
+    fill: hsl(var(--muted-foreground)) !important;
+  }
+
   /* Noise texture overlay */
   .noise-overlay::before {
     content: '';

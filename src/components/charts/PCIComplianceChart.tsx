@@ -1,7 +1,31 @@
 import { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, TooltipProps } from 'recharts';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { cn } from '@/lib/utils';
+
+const tooltipStyle: React.CSSProperties = {
+  backgroundColor: 'hsl(var(--card))',
+  border: '1px solid hsl(var(--border))',
+  borderRadius: '8px',
+  padding: '8px 12px',
+  fontSize: '12px',
+  color: 'hsl(var(--muted-foreground))',
+};
+
+function PCIChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  if (!active || !payload?.length) return null;
+  const item = payload[0].payload as RequirementData;
+  return (
+    <div style={tooltipStyle} className="shadow-xl">
+      <div style={{ color: 'hsl(var(--muted-foreground))', fontWeight: 600, marginBottom: 4 }}>
+        Requirement {label}
+      </div>
+      <div style={{ color: 'hsl(var(--muted-foreground))' }}>
+        {item.fullName}: <strong style={{ color: 'hsl(var(--foreground))' }}>{payload[0].value}%</strong>
+      </div>
+    </div>
+  );
+}
 
 interface RequirementData {
   name: string;
@@ -108,18 +132,7 @@ const PCIComplianceChart = ({ className }: PCIComplianceChartProps) => {
             />
             <Tooltip
               cursor={{ fill: 'hsl(164 15% 24% / 0.3)' }}
-              contentStyle={{
-                backgroundColor: 'hsl(165 10% 10%)',
-                border: '1px solid hsl(164 15% 24%)',
-                borderRadius: '8px',
-                color: 'hsl(160 10% 95%)',
-                fontSize: '12px',
-              }}
-              formatter={(value: number, name: string, props: any) => [
-                `${value}%`,
-                props.payload.fullName
-              ]}
-              labelFormatter={(label) => `Requirement ${label}`}
+              content={<PCIChartTooltip />}
             />
             <Bar
               dataKey="compliance"
