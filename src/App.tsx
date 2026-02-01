@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RegistrationProvider } from "./context/RegistrationContext";
+import ScrollToTop from "./components/ScrollToTop";
 import NotFound from "./pages/NotFound";
 
 // Qatar pages
@@ -36,7 +37,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <RegistrationProvider>
-          <Routes>
+          <ScrollToTop />
+        <Routes>
             <Route path="/" element={<QatarHome />} />
             <Route path="/auth/register" element={<Registration />} />
             <Route path="/login" element={<Login />} />
