@@ -1,20 +1,33 @@
-# Use Alpine for a lighter, faster build image
-FROM node:20-alpine
+# ========== Stage 1: Build ==========
+FROM node:20-alpine AS builder
 
-# Set the working directory
 WORKDIR /app
 
-# 1. Optimize Caching: Copy package files first
+# Copy package files first for better layer caching
 COPY package.json package-lock.json ./
 
-# 2. Install Dependencies
-# We use 'npm ci' for a clean, deterministic install
+# Install dependencies (use npm ci for deterministic installs)
 RUN npm ci --legacy-peer-deps
 
-# 3. Copy the rest of the source code
+# Copy source and build
 COPY . .
+RUN npm run build
 
-RUN npx vite build
+# ========== Stage 2: Serve ==========
+FROM nginx:alpine
 
-# 5. Dummy Command for the Artifact Builder pattern
-CMD ["echo", "Build success. Ready for artifact extraction."]
+# Copy built assets from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# SPA: serve index.html for client-side routes (e.g. /qatar/sector)
+RUN echo 'server { \
+  listen 80; \
+  root /usr/share/nginx/html; \
+  index index.html; \
+  location / { try_files $uri $uri/ /index.html; } \
+  location /health { return 200 "OK"; add_header Content-Type text/plain; } \
+}' > /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
