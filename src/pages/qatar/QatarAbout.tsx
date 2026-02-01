@@ -37,10 +37,8 @@ const QatarAbout = () => {
   ];
 
   const team = [
-    { name: 'Mohammed Al-Thani', role: 'Regional Director', expertise: 'Qatar Compliance' },
-    { name: 'Sara Al-Mansouri', role: 'Head of Operations', expertise: 'QCB Regulations' },
-    { name: 'Ahmed Hassan', role: 'Technical Lead', expertise: 'Security Frameworks' },
-    { name: 'Fatima Al-Dosari', role: 'Client Success', expertise: 'Implementation' }
+    { name: 'Sherif Shaalan', role: 'Founder, CEO', expertise: 'Banking Compliance', country: '🇪🇬 Egypt', affiliations: 'Nexia International • Oracle' },
+    { name: 'Ahmed Halwany', role: 'COO', expertise: 'Operations & Strategy', country: '🇪🇬 Egypt', affiliations: 'Nexia International • Deloitte' }
   ];
 
   return (
@@ -131,15 +129,16 @@ const QatarAbout = () => {
                 Experienced professionals dedicated to your compliance success
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {team.map((member, index) => (
-                <div key={index} className="card-light p-6 rounded-2xl text-center">
+                <div key={index} className="card-light p-6 rounded-2xl text-center relative">
+                  <span className="absolute top-4 right-4 text-lg" aria-hidden>{member.country}</span>
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-4 flex items-center justify-center">
                     <Users className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold">{member.name}</h3>
-                  <p className="text-primary font-medium text-sm">{member.role}</p>
-                  <p className="text-muted-foreground text-sm mt-1">{member.expertise}</p>
+                  <p className="bg-primary/90 text-primary-foreground font-medium text-sm px-3 py-1.5 rounded-lg inline-block mb-2">{member.role}</p>
+                  <h3 className="text-lg font-semibold text-foreground">{member.name}</h3>
+                  <p className="text-muted-foreground text-xs mt-2 px-3 py-1.5 rounded-full bg-muted/50 inline-block">{member.affiliations}</p>
                 </div>
               ))}
             </div>
