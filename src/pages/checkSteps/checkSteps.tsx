@@ -30,19 +30,19 @@ function applyStatusAndNavigate(
       navigate(`/profile-completion?token=${token}&email=${encodeURIComponent(email || "")}`, { state: { token, email } });
       break;
     case REGISTRATION_STEPS.PERSONAL_INFO:
-      navigate(`/know-my-org?token=${token}`, { state: { token } });
+      navigate("/know-my-org", { state: { token } });
       break;
     case REGISTRATION_STEPS.ORGANIZATION_INFO:
       setCurrentStep(REGISTRATION_STEPS.COMPLETED);
-      navigate(`/assessment-question?token=${token}`, { state: { token } });
+      navigate("/assessment-question", { state: { token } });
       break;
     case REGISTRATION_STEPS.BUSINESS_OBJECTIVES:
     case REGISTRATION_STEPS.COMPLIANCE_OBJECTIVES:
-      navigate(`/know-my-org?token=${token}`, { state: { token } });
+      navigate("/know-my-org", { state: { token } });
       break;
     case REGISTRATION_STEPS.COMPLETED:
       if (jwtToken) localStorage.setItem("token", jwtToken);
-      navigate(`/assessment-question?token=${token}`, { state: { token } });
+      navigate("/assessment-question", { state: { token } });
       break;
     case REGISTRATION_STEPS.EXPIRED:
       navigate("/auth/register");

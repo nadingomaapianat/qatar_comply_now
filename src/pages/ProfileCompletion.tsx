@@ -185,6 +185,8 @@ const ProfileCompletion = () => {
 
   return (
     <StepperLayout
+      variant="landing"
+      showHeader={false}
       title="Complete Your Profile"
       description="Please provide your personal information to continue with the registration process."
       onNext={isPersonalInfoSet ? handleContinue : handleSubmit}
@@ -194,56 +196,56 @@ const ProfileCompletion = () => {
       isNextDisabled={isPersonalInfoSet ? false : (!formData.username || !formData.password || !formData.confirmPassword || isSubmitting)}
       isNextLoading={isSubmitting}
     >
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Email Display */}
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div className="p-3.5 bg-muted/30 border border-border rounded-lg">
           <div className="flex items-center space-x-3">
-            <Mail className="w-5 h-5 text-gray-500" />
+            <Mail className="w-5 h-5 text-accent" />
             <div>
-              <Label className="text-sm font-medium text-gray-700">Email Address</Label>
-              <p className="text-gray-900">{email}</p>
+              <Label className="text-sm font-medium text-muted-foreground">Email Address</Label>
+              <p className="text-foreground font-medium">{email}</p>
             </div>
           </div>
         </div>
 
         {/* Username Field */}
         <div className="space-y-2">
-          <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="username" className="text-sm font-medium text-foreground">
             Username *
           </Label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               id="username"
               type="text"
               placeholder="Enter your username"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
-              className={`pl-10 h-12 border-gray-300 focus:border-[#14B8A6] ${
-                errors.username ? 'border-red-500' : ''
+              className={`pl-10 h-12 bg-background/80 border-border text-foreground placeholder:text-muted-foreground focus:border-accent ${
+                errors.username ? 'border-destructive' : ''
               }`}
             />
           </div>
           {errors.username && (
-            <p className="text-sm text-red-600">{errors.username}</p>
+            <p className="text-sm text-destructive">{errors.username}</p>
           )}
         </div>
 
         {/* Password Field */}
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="password" className="text-sm font-medium text-foreground">
             Password *
           </Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
-              className={`pl-10 pr-10 h-12 border-gray-300 focus:border-[#14B8A6] ${
-                errors.password ? 'border-red-500' : ''
+              className={`pl-10 pr-10 h-12 bg-background/80 border-border text-foreground placeholder:text-muted-foreground focus:border-accent ${
+                errors.password ? 'border-destructive' : ''
               }`}
               disabled={isPersonalInfoSet}
             />
@@ -251,7 +253,7 @@ const ProfileCompletion = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -262,25 +264,25 @@ const ProfileCompletion = () => {
             )}
           </div>
           {errors.password && (
-            <p className="text-sm text-red-600">{errors.password}</p>
+            <p className="text-sm text-destructive">{errors.password}</p>
           )}
         </div>
 
         {/* Confirm Password Field */}
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
             Confirm Password *
           </Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm your password"
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              className={`pl-10 pr-10 h-12 border-gray-300 focus:border-[#14B8A6] ${
-                errors.confirmPassword ? 'border-red-500' : ''
+              className={`pl-10 pr-10 h-12 bg-background/80 border-border text-foreground placeholder:text-muted-foreground focus:border-accent ${
+                errors.confirmPassword ? 'border-destructive' : ''
               }`}
               disabled={isPersonalInfoSet}
             />
@@ -288,7 +290,7 @@ const ProfileCompletion = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
               >
                 {showConfirmPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -299,20 +301,20 @@ const ProfileCompletion = () => {
             )}
           </div>
           {errors.confirmPassword && (
-            <p className="text-sm text-red-600">{errors.confirmPassword}</p>
+            <p className="text-sm text-destructive">{errors.confirmPassword}</p>
           )}
         </div>
         {isPersonalInfoSet && (
-          <div className="text-sm text-gray-500 mb-2">
+          <div className="text-sm text-muted-foreground mb-2">
             Personal info already saved. You cannot update it here. Click Continue to proceed.<br />
             Password cannot be changed here. Use password reset if needed.
           </div>
         )}
         {/* Password Requirements */}
         {!isPersonalInfoSet && (
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <h4 className="text-sm font-medium text-blue-900 mb-2">Password Requirements:</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="p-4 bg-accent/10 border border-accent/30 rounded-lg">
+            <h4 className="text-sm font-medium text-foreground mb-2">Password Requirements:</h4>
+            <ul className="text-sm text-muted-foreground space-y-1">
               <li>• At least 8 characters long</li>
               <li>• Use a combination of letters, numbers, and symbols</li>
               <li>• Avoid common passwords</li>

@@ -179,9 +179,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
         }
         
         if (targetPath && currentPath !== targetPath) {
-          navigate(`${targetPath}?token=${token}`, { 
-            state: { token, email } 
-          });
+          navigate(targetPath, { state: { token, email } });
         }
       } else {
         throw new Error(response?.message || 'Failed to restore registration');

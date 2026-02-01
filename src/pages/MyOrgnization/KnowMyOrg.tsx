@@ -27,6 +27,7 @@ import { useRegistration } from '@/context/RegistrationContext';
 import { submitOrganizationInfo, getRegistrationStatus } from '@/services/steperService';
 import { StepperLayout } from '@/components/StepperLayout';
 import { OrganizationVerificationModal } from './popupVerify';
+import ParticleField from '@/components/animations/ParticleField';
 
 interface OrganizationProfile {
   name: string;
@@ -943,87 +944,69 @@ const KnowMyOrg = () => {
   const isBusinessObjectivesStep = currentStep === 'business_objectives';
   const isComplianceObjectivesStep = currentStep === 'compliance_objectives';
 
-  // Show loading screen only if we're on organization step and in loading state
+  // Show loading screen only if we're on organization step and in loading state (landing theme, no navbar)
   if (isOrganizationStep && step === 'loading') {
     return (
-      <div className="min-h-screen bg-[#F2F4F7]">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200">
-          <div className="px-6 py-4">
-            <div className="flex items-center">
-              <img 
-                src="/Comply now logo.png" 
-                alt="Comply now logo" 
-                className="h-8 w-auto mr-3"
-              />
-              <h1 className="text-xl font-bold text-[#003399]">EG.Portal</h1>
-              <Badge className="ml-3 bg-[#14B8A6] text-white border-none">Egypt Edition</Badge>
-            </div>
-          </div>
-        </header>
-
-        <div className=" px-6 py-12">
-          <div className=" mx-auto">
-            <div className="text-center mb-8">
-              <Loader2 className="w-16 h-16 text-[#14B8A6] animate-spin mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-[#003399] mb-2">
+      <div className="min-h-screen bg-background relative">
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <ParticleField className="absolute inset-0 w-full h-full" particleCount={40} color="green" />
+        </div>
+        <div className="relative z-10 pt-10 px-4 sm:px-6 py-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-6">
+              <Loader2 className="w-14 h-14 text-accent animate-spin mx-auto mb-3" />
+              <h2 className="text-xl font-bold text-foreground mb-1.5">
                 Fetching public signals… building a compliance profile.
               </h2>
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground text-sm mb-3">
                 AI Scout Agent analyzing {formData.companyName}
               </p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                <div 
-                  className="bg-[#14B8A6] h-2 rounded-full transition-all duration-500 ease-out"
-                  style={{ 
-                    width: `${(agentSteps.filter(step => step.status === 'completed').length / agentSteps.length) * 100}%` 
+              <div className="w-full bg-muted rounded-full h-1.5 mb-3">
+                <div
+                  className="bg-accent h-1.5 rounded-full transition-all duration-500 ease-out"
+                  style={{
+                    width: `${(agentSteps.filter(s => s.status === 'completed').length / agentSteps.length) * 100}%`
                   }}
-                ></div>
+                />
               </div>
-              <p className="text-sm text-gray-500">
-                {agentSteps.filter(step => step.status === 'completed').length} of {agentSteps.length} steps completed
+              <p className="text-xs text-muted-foreground">
+                {agentSteps.filter(s => s.status === 'completed').length} of {agentSteps.length} steps completed
               </p>
             </div>
 
-            <Card className="border-none shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-[#003399] flex items-center">
-                  <Database className="w-5 h-5 mr-2" />
+            <Card className="glass border border-border overflow-hidden">
+              <CardHeader className="px-4 py-3 border-b border-border">
+                <CardTitle className="text-base font-semibold text-foreground flex items-center gap-2">
+                  <Database className="w-4 h-4 text-accent shrink-0" />
                   AI Agent Reasoning - Transparent Process
                 </CardTitle>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Watch our AI agents fetch data from official trusted sources
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {agentSteps.map((step, index) => (
-                  <div key={step.id} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                    <div className="flex-shrink-0 mt-1">
-                      {step.status === 'completed' && (
-                        <CheckCircle className=" h-5 text-green-600" />
-                      )}
-                      {step.status === 'processing' && (
-                        <Loader2 className=" h-5 text-[#14B8A6] animate-spin" />
-                      )}
-                      {step.status === 'pending' && (
-                        <Clock className=" h-5 text-gray-400" />
-                      )}
+              <CardContent className="p-3 space-y-2.5">
+                {agentSteps.map((s) => (
+                  <div key={s.id} className="flex items-start gap-3 p-3 border border-border rounded-lg bg-background/50">
+                    <div className="flex-shrink-0 mt-0.5">
+                      {s.status === 'completed' && <CheckCircle className="h-4 w-4 text-accent" />}
+                      {s.status === 'processing' && <Loader2 className="h-4 w-4 text-accent animate-spin" />}
+                      {s.status === 'pending' && <Clock className="h-4 w-4 text-muted-foreground" />}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        {step.icon}
-                        <h3 className="font-semibold text-gray-900">{step.title}</h3>
-                        {step.status === 'processing' && (
-                          <Badge className="bg-[#14B8A6] text-white text-xs">Active</Badge>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        {s.icon}
+                        <h3 className="font-medium text-foreground text-sm">{s.title}</h3>
+                        {s.status === 'processing' && (
+                          <Badge className="bg-accent/20 text-accent border-accent/30 text-xs">Active</Badge>
                         )}
-                        {step.status === 'completed' && (
-                          <Badge className="bg-green-100 text-green-700 text-xs">Complete</Badge>
+                        {s.status === 'completed' && (
+                          <Badge className="bg-accent/20 text-accent border-accent/30 text-xs">Complete</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{step.description}</p>
-                      {step.source && (
-                        <p className="text-xs text-gray-500">
-                          <strong>Sources:</strong> {step.source}
+                      <p className="text-xs text-muted-foreground">{s.description}</p>
+                      {s.source && (
+                        <p className="text-[10px] text-muted-foreground mt-1">
+                          <strong>Sources:</strong> {s.source}
                         </p>
                       )}
                     </div>
@@ -1032,11 +1015,9 @@ const KnowMyOrg = () => {
               </CardContent>
             </Card>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500">
-                All data is sourced from official registers and publicly available information
-              </p>
-            </div>
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              All data is sourced from official registers and publicly available information
+            </p>
           </div>
         </div>
       </div>
@@ -1047,6 +1028,8 @@ const KnowMyOrg = () => {
   if (isOrganizationStep && step === 'input') {
     return (
       <StepperLayout
+        variant="landing"
+        showHeader={false}
         title="Tell Us About Your Organization"
         description="Help us build your personalized compliance profile in under 60 seconds"
         onNext={handleSubmit}
@@ -1058,11 +1041,11 @@ const KnowMyOrg = () => {
       >
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="companyName" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="companyName" className="text-sm font-medium text-foreground">
               Company Name *
             </Label>
             <div className="relative org-dropdown-container">
-              <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 id="companyName"
                 type="text"
@@ -1078,37 +1061,37 @@ const KnowMyOrg = () => {
                     }
                   }
                 }}
-                className={`pl-10 h-12 border-gray-300 focus:border-[#14B8A6] ${errors.companyName ? 'border-red-500' : ''}`}
+                className={`pl-10 h-12 bg-background/80 border-border text-foreground placeholder:text-muted-foreground focus:border-accent ${errors.companyName ? 'border-destructive' : ''}`}
                 disabled={orgIsOther ? false : false}
                 autoComplete="off"
               />
 
               {/* Dropdown for organization suggestions */}
               {showOrgDropdown && !orgIsOther && (
-                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 w-full bg-card border border-border rounded shadow-lg max-h-60 overflow-y-auto z-50 text-foreground">
                   {orgSearchLoading && (
-                    <div className="px-4 py-2 text-gray-500 flex items-center gap-2">
+                    <div className="px-4 py-2 text-muted-foreground flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
                       Searching organizations...
                     </div>
                   )}
                   {!orgSearchLoading && orgFilteredResults.length === 0 && orgSearchTerm.trim().length >= 2 && (
-                    <div className="px-4 py-2 text-gray-500">No organizations found</div>
+                    <div className="px-4 py-2 text-muted-foreground">No organizations found</div>
                   )}
                   {!orgSearchLoading && orgFilteredResults.length === 0 && orgSearchTerm.trim().length < 2 && orgSearchTerm.trim().length > 0 && (
-                    <div className="px-4 py-2 text-gray-500">Type at least 2 characters to search</div>
+                    <div className="px-4 py-2 text-muted-foreground">Type at least 2 characters to search</div>
                   )}
                   {orgFilteredResults.map(org => (
                     <div
                       key={org.id}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                      className="px-4 py-2 hover:bg-muted cursor-pointer flex items-center gap-2"
                       onClick={() => handleOrgSelect(org.name)}
                     >
                       <span>{org.name}</span>
                     </div>
                   ))}
                   <div
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-blue-600 border-t border-gray-200"
+                    className="px-4 py-2 hover:bg-muted cursor-pointer text-accent border-t border-border"
                     onClick={handleOrgOther}
                   >
                     Other
@@ -1117,21 +1100,21 @@ const KnowMyOrg = () => {
               )}
             </div>
             {errors.companyName && (
-              <p className="text-sm text-red-600">{errors.companyName}</p>
+              <p className="text-sm text-destructive">{errors.companyName}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="country" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="country" className="text-sm font-medium text-foreground">
               Headquarters Country *
             </Label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search for a country..."
-                className={`w-full pl-10 pr-4 h-12 border border-gray-300 focus:outline-none focus:border-[#14B8A6] rounded ${
-                  errors.country ? 'border-red-500' : ''
+                className={`w-full pl-10 pr-4 h-12 bg-background/80 border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent rounded ${
+                  errors.country ? 'border-destructive' : ''
                 }`}
                 onFocus={() => setShowDropdown(true)}
                 onChange={(e) => {
@@ -1142,7 +1125,7 @@ const KnowMyOrg = () => {
               />
 
               {showDropdown && (
-                <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded shadow max-h-60 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 w-full bg-card border border-border rounded shadow-lg max-h-60 overflow-y-auto z-50 text-foreground">
                   {euCountries
                     .filter((country) =>
                       country.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -1150,7 +1133,7 @@ const KnowMyOrg = () => {
                     .map((country) => (
                       <div
                         key={country.name}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                        className="px-4 py-2 hover:bg-muted cursor-pointer flex items-center gap-2"
                         onClick={() => {
                           setSelected(country.name);
                           setSearchTerm(country.name);
@@ -1175,31 +1158,29 @@ const KnowMyOrg = () => {
               )}
             </div>
             {errors.country && (
-              <p className="text-sm text-red-600">{errors.country}</p>
+              <p className="text-sm text-destructive">{errors.country}</p>
             )}
           </div>
 
-
-
           <div className="space-y-2">
-            <Label htmlFor="website" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="website" className="text-sm font-medium text-foreground">
               Website *
             </Label>
             <div className="relative">
-              <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 id="website"
                 type="url"
                 placeholder="https://www.yourcompany.com"
                 value={formData.website}
                 onChange={(e) => handleInputChange('website', e.target.value)}
-                className={`pl-10 h-12 border-gray-300 focus:border-[#14B8A6] ${
-                  errors.website ? 'border-red-500' : ''
+                className={`pl-10 h-12 bg-background/80 border-border text-foreground placeholder:text-muted-foreground focus:border-accent ${
+                  errors.website ? 'border-destructive' : ''
                 }`}
               />
             </div>
             {errors.website && (
-              <p className="text-sm text-red-600">{errors.website}</p>
+              <p className="text-sm text-destructive">{errors.website}</p>
             )}
           </div>
         </div>
@@ -1220,11 +1201,12 @@ const KnowMyOrg = () => {
 
   // Business Objectives Step
   if (isBusinessObjectivesStep) {
-    // Always show all business objectives for selection, but filter when sending to backend
     const businessObjectives = companyData?.business_objectives?.value || [];
     
     return (
       <StepperLayout
+        variant="landing"
+        showHeader={false}
         title="Select Business Objectives"
         description="Select the business objectives that apply to your organization"
         onNext={handleBusinessObjectivesNext}
@@ -1233,14 +1215,23 @@ const KnowMyOrg = () => {
         previousLabel="Back"
         isNextDisabled={selectedBusinessObjectives.size === 0}
       >
-        <Card className="border-none shadow-lg">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-bold text-[#003399]">
-                Business Objectives
-              </CardTitle>
-              <Button 
-                variant="outline" 
+        <div className="rounded-xl border border-border overflow-hidden bg-background/40 flex-1 flex flex-col min-h-0">
+          <div className="px-4 py-3 border-b border-border bg-muted/20 shrink-0">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/20">
+                  <Target className="h-4 w-4 text-accent" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-foreground">Business Objectives</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {selectedBusinessObjectives.size} of {businessObjectives.length} selected
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
                 size="sm"
                 onClick={() => {
                   const allSelected = businessObjectives.every((obj: any) => selectedBusinessObjectives.has(obj.id));
@@ -1250,122 +1241,119 @@ const KnowMyOrg = () => {
                     setSelectedBusinessObjectives(new Set(businessObjectives.map((obj: any) => obj.id)));
                   }
                 }}
-                className="text-teal-600 border-teal-600 hover:bg-teal-600 hover:text-white"
+                className="shrink-0 border-accent/50 text-accent hover:bg-accent/10 hover:text-accent"
               >
                 {businessObjectives.every((obj: any) => selectedBusinessObjectives.has(obj.id)) ? 'Deselect All' : 'Select All'}
               </Button>
             </div>
-            <p className="text-sm text-gray-600 mt-2">
-              Select one or more business objectives that are relevant to your organization
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          </div>
+
+          <div className="p-3 space-y-2.5 flex-1 min-h-0 overflow-y-auto">
             {businessObjectives.length > 0 ? (
               businessObjectives.map((objective: any) => {
                 const isSelected = selectedBusinessObjectives.has(objective.id);
                 return (
-                  <div 
-                    key={objective.id} 
-                    className={`p-4 border rounded-lg transition-all duration-200 ${
-                      isSelected 
-                        ? 'border-teal-500 bg-teal-50' 
-                        : 'border-gray-200 hover:border-teal-300 hover:bg-gray-50'
+                  <label
+                    key={objective.id}
+                    htmlFor={`business-${objective.id}`}
+                    className={`flex cursor-pointer gap-3 rounded-lg border-2 p-3 transition-all duration-200 ${
+                      isSelected
+                        ? 'border-accent bg-accent/10 shadow-sm'
+                        : 'border-border bg-muted/20 hover:border-accent/50 hover:bg-accent/5'
                     }`}
                   >
-                    <div className="flex items-start space-x-3">
+                    <div className="flex h-5 w-5 shrink-0 items-center pt-0.5">
                       <Checkbox
                         id={`business-${objective.id}`}
                         checked={isSelected}
                         onCheckedChange={() => {
                           setSelectedBusinessObjectives(prev => {
                             const newSet = new Set(prev);
-                            if (newSet.has(objective.id)) {
-                              newSet.delete(objective.id);
-                            } else {
-                              newSet.add(objective.id);
-                            }
+                            if (newSet.has(objective.id)) newSet.delete(objective.id);
+                            else newSet.add(objective.id);
                             return newSet;
                           });
                         }}
-                        className="data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
+                        className="h-4 w-4 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
                       />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-2">
-                            <Label htmlFor={`business-${objective.id}`} className="text-base font-semibold text-gray-900 cursor-pointer">
-                              {objective.name}
-                            </Label>
-                            <Badge 
-                              variant={objective.priority === 'high' ? 'destructive' : 'secondary'}
-                              className={objective.priority === 'high' ? 'bg-red-100 text-red-700' : ''}
-                            >
-                              {objective.priority}
-                            </Badge>
-              </div>
-                          {isSelected && (
-                            <div className="flex items-center space-x-1 text-teal-600">
-                              <CheckCircle className="w-4 h-4" />
-                              <span className="text-sm font-medium">Selected</span>
-            </div>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-700 mb-3">{objective.description}</p>
-                        
-                        {/* Drivers */}
-                        {objective.drivers && objective.drivers.length > 0 && (
-                          <div className="mb-3">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">Drivers:</p>
-                            <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
-                              {objective.drivers.map((driver: string, idx: number) => (
-                                <li key={idx}>{driver}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        {/* Risk Implications */}
-                        {objective.risk_implications && objective.risk_implications.length > 0 && (
-                          <div className="mb-3">
-                            <p className="text-xs font-semibold text-gray-600 mb-1">Risk Implications:</p>
-                            <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
-                              {objective.risk_implications.map((risk: string, idx: number) => (
-                                <li key={idx}>{risk}</li>
-                              ))}
-                            </ul>
                     </div>
-                        )}
-                        
-                        {/* Applicable Compliance Frameworks */}
-                        {objective.applicable_compliance_frameworks && objective.applicable_compliance_frameworks.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-gray-200">
-                            <p className="text-xs font-semibold text-gray-600 mb-2">Applicable Compliance Frameworks:</p>
-                            <div className="space-y-2">
-                              {objective.applicable_compliance_frameworks.map((fw: any, idx: number) => (
-                                <div key={idx} className="flex items-start space-x-2 text-xs">
-                                  <CheckCircle className="w-3 h-3 text-teal-500 mt-0.5 flex-shrink-0" />
-                                  <div>
-                                    <p className="text-gray-700 font-medium">{fw.id}</p>
-                                    {fw.alignment_reason && (
-                                      <p className="text-gray-600 mt-1">{fw.alignment_reason}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="font-semibold text-foreground text-sm">{objective.name}</span>
+                        <Badge
+                          variant={objective.priority === 'high' ? 'destructive' : 'secondary'}
+                          className={
+                            objective.priority === 'high'
+                              ? 'bg-destructive/20 text-destructive text-xs'
+                              : 'bg-muted text-muted-foreground text-xs'
+                          }
+                        >
+                          {objective.priority}
+                        </Badge>
+                        {isSelected && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-accent/20 px-2 py-0.5 text-xs font-medium text-accent">
+                            <CheckCircle className="h-3 w-3" />
+                            Selected
+                          </span>
                         )}
                       </div>
-                                </div>
-                              ))}
+                      <p className="text-xs text-muted-foreground leading-relaxed">{objective.description}</p>
+
+                      {(objective.drivers?.length > 0 || objective.risk_implications?.length > 0 || objective.applicable_compliance_frameworks?.length > 0) && (
+                        <div className="mt-2 space-y-2 rounded-lg bg-background/50 border border-border p-2.5 text-xs">
+                          {objective.drivers?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-muted-foreground mb-0.5">Drivers</p>
+                              <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
+                                {objective.drivers.map((driver: string, idx: number) => (
+                                  <li key={idx}>{driver}</li>
+                                ))}
+                              </ul>
                             </div>
-                          </div>
+                          )}
+                          {objective.risk_implications?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-muted-foreground mb-0.5">Risk implications</p>
+                              <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
+                                {objective.risk_implications.map((risk: string, idx: number) => (
+                                  <li key={idx}>{risk}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {objective.applicable_compliance_frameworks?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-muted-foreground mb-0.5">Applicable frameworks</p>
+                              <div className="space-y-1">
+                                {objective.applicable_compliance_frameworks.map((fw: any, idx: number) => (
+                                  <div key={idx} className="flex gap-2">
+                                    <CheckCircle className="h-3 w-3 shrink-0 text-accent mt-0.5" />
+                                    <div>
+                                      <span className="font-medium text-foreground">{fw.id}</span>
+                                      {fw.alignment_reason && (
+                                        <span className="text-muted-foreground"> — {fw.alignment_reason}</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
-                  </div>
-                  </div>
+                  </label>
                 );
               })
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <p>No business objectives found. Please complete the organization step first.</p>
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 py-8 text-center">
+                <Target className="h-10 w-10 text-muted-foreground mb-2" />
+                <p className="text-sm font-medium text-foreground">No business objectives found</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Complete the organization step first to see objectives.</p>
               </div>
             )}
-              </CardContent>
-            </Card>
+          </div>
+        </div>
       </StepperLayout>
     );
   }
@@ -1377,6 +1365,8 @@ const KnowMyOrg = () => {
     
     return (
       <StepperLayout
+        variant="landing"
+        showHeader={false}
         title="Select Compliance Frameworks"
         description="Select the compliance frameworks that apply to your organization"
         onNext={handleComplianceObjectivesNext}
@@ -1385,10 +1375,10 @@ const KnowMyOrg = () => {
         previousLabel="Back"
         isNextDisabled={selectedComplianceFrameworks.size === 0}
       >
-        <Card className="border-none shadow-lg">
+        <Card className="border border-border bg-card/50 shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-bold text-[#003399]">
+              <CardTitle className="text-xl font-bold text-foreground">
                 Compliance Frameworks
               </CardTitle>
               <Button 
@@ -1402,12 +1392,12 @@ const KnowMyOrg = () => {
                     setSelectedComplianceFrameworks(new Set(complianceFrameworks.map((fw: any) => fw.id)));
                   }
                 }}
-                className="text-teal-600 border-teal-600 hover:bg-teal-600 hover:text-white"
+                className="text-accent border-accent hover:bg-accent hover:text-background"
               >
                 {complianceFrameworks.every((fw: any) => selectedComplianceFrameworks.has(fw.id)) ? 'Deselect All' : 'Select All'}
               </Button>
             </div>
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Select one or more compliance frameworks that are relevant to your organization
             </p>
           </CardHeader>
@@ -1420,8 +1410,8 @@ const KnowMyOrg = () => {
                     key={framework.id} 
                     className={`p-4 border rounded-lg transition-all duration-200 ${
                       isSelected 
-                        ? 'border-teal-500 bg-teal-50' 
-                        : 'border-gray-200 hover:border-teal-300 hover:bg-gray-50'
+                        ? 'border-accent bg-accent/10' 
+                        : 'border-border hover:border-accent/50 hover:bg-muted/30'
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -1520,42 +1510,42 @@ const KnowMyOrg = () => {
                             }
                           }
                         }}
-                        className="data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
+                        className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
-                            <Label htmlFor={`compliance-${framework.id}`} className="text-base font-semibold text-gray-900 cursor-pointer">
+                            <Label htmlFor={`compliance-${framework.id}`} className="text-base font-semibold text-foreground cursor-pointer">
                               {framework.name}
                             </Label>
                             <Badge 
                               variant="outline" 
-                              className="bg-teal-100 text-teal-700 border-teal-200 text-xs"
+                              className="bg-accent/20 text-accent border-accent/30 text-xs"
                             >
                               Applicable
                             </Badge>
-            </div>
+                          </div>
                           {isSelected && (
-                            <div className="flex items-center space-x-1 text-teal-600">
+                            <div className="flex items-center space-x-1 text-accent">
                               <CheckCircle className="w-4 h-4" />
                               <span className="text-sm font-medium">Selected</span>
-          </div>
+                            </div>
                           )}
                         </div>
-                        <p className="text-sm text-gray-700">{framework.reason}</p>
+                        <p className="text-sm text-muted-foreground">{framework.reason}</p>
                         {companyData?.applicable_compliance_frameworks?.source?.length > 0 && (
-                          <div className="mt-2 flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="mt-2 flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{companyData.applicable_compliance_frameworks.source.length} source(s)</span>
                           </div>
                         )}
                       </div>
-        </div>
-      </div>
+                    </div>
+                  </div>
                 );
               })
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 <p>No compliance frameworks found. Please complete the organization step first.</p>
               </div>
             )}
@@ -1569,6 +1559,8 @@ const KnowMyOrg = () => {
   if (step === 'review' && !isBusinessObjectivesStep && !isComplianceObjectivesStep) {
     return (
       <StepperLayout
+        variant="landing"
+        showHeader={false}
         title="Review Your Organization Profile"
         description="Please review the information we've gathered"
         onNext={() => goToStep('business_objectives', true)}
@@ -1579,14 +1571,14 @@ const KnowMyOrg = () => {
       >
         <div className="w-full space-y-6">
           {/* Comprehensive AI Data Display */}
-          <Card className="border border-gray-200 rounded-lg shadow-sm relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 rounded-t-lg"></div>
-            <CardHeader className="border-b border-gray-200 pb-4 pt-6">
+          <Card className="border border-border rounded-lg shadow-sm relative bg-card/50">
+            <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-lg"></div>
+            <CardHeader className="border-b border-border pb-4 pt-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-teal-100 rounded-lg">
-                  <Database className="w-5 h-5 text-teal-600" />
+                <div className="p-2 bg-accent/20 rounded-lg">
+                  <Database className="w-5 h-5 text-accent" />
                 </div>
-                <CardTitle className="text-lg font-semibold text-gray-900">
+                <CardTitle className="text-lg font-semibold text-foreground">
                   AI Analysis Results
                 </CardTitle>
               </div>
@@ -1596,19 +1588,19 @@ const KnowMyOrg = () => {
               {/* Basic Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Organization Name */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/50 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-teal-100 rounded-lg">
-                        <Building2 className="w-4 h-4 text-teal-600" />
+                      <div className="p-2 bg-accent/20 rounded-lg">
+                        <Building2 className="w-4 h-4 text-accent" />
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900">Organization Name</h4>
+                      <h4 className="text-sm font-semibold text-foreground">Organization Name</h4>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDataEdit('organization_name.value')}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-teal-600"
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
                     >
                       <Edit className="w-3 h-3" />
                     </Button>
@@ -1722,7 +1714,7 @@ const KnowMyOrg = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDataEdit('entity_type.value')}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-teal-600"
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
                     >
                       <Edit className="w-3 h-3" />
                     </Button>
@@ -1799,7 +1791,7 @@ const KnowMyOrg = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDataEdit('headquarters_country.value')}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-teal-600"
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
                     >
                       <Edit className="w-3 h-3" />
                     </Button>
@@ -1884,7 +1876,7 @@ const KnowMyOrg = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDataEdit('industry_sectors.value')}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-teal-600"
+                      className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
                     >
                       <Edit className="w-3 h-3" />
                     </Button>
@@ -2086,7 +2078,7 @@ const KnowMyOrg = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDataEdit('regulatory_details.supervisory_authority.value')}
-                            className="h-6 w-6 p-0 text-gray-400 hover:text-teal-600"
+                            className="h-6 w-6 p-0 text-muted-foreground hover:text-accent"
                           >
                             <Edit className="w-3 h-3" />
                           </Button>

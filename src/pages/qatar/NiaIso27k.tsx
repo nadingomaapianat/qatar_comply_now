@@ -93,7 +93,7 @@ const NiaIso27k = () => {
 
             <div className="flex flex-wrap gap-4">
               <Link
-                to="/qatar/contact"
+                to="/auth/register"
                 className="inline-flex items-center gap-2 btn-gradient px-6 py-3 rounded-xl text-white font-medium"
               >
                 Request Demo <ArrowRight size={18} />

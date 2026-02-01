@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-export const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { API_BASE_URL } from "@/lib/api";
 
 
 async function getCsrfToken(): Promise<string> {
@@ -63,13 +63,23 @@ export async function fetchAllQuestionUserData(): Promise<any> {
       headers,
     });
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
 
     if (!response.ok) {
       if (response.status === 401 || response.status === 403 || data.message === "Forbidden access") {
         throw new Error("Forbidden: You do not have permission to access this resource.");
       }
-      throw new Error(`Fetch failed: ${data.message || "Unknown error occurred"}`);
+      if (response.status === 500) {
+        throw new Error(
+          "The server encountered an error. Please try again in a moment, or check that the backend is running correctly."
+        );
+      }
+      throw new Error(data?.message || "Unknown error occurred");
     }
 
     return data;

@@ -214,13 +214,17 @@ interface RegistrationStepperProps {
   currentStep: string;
   onStepClick?: (step: string) => void;
   className?: string;
+  /** Use 'dark' for landing/dark theme (accent colors, compact). */
+  variant?: 'default' | 'dark';
 }
 
 export const RegistrationStepper: React.FC<RegistrationStepperProps> = ({
   currentStep,
   onStepClick,
-  className
+  className,
+  variant = 'default'
 }) => {
+  const isDark = variant === 'dark';
   const steps = [
     {
       id: 'email_sent',
@@ -316,85 +320,93 @@ export const RegistrationStepper: React.FC<RegistrationStepperProps> = ({
     status: (index < adjustedIndex ? 'completed' : index === adjustedIndex ? 'current' : 'upcoming') as 'completed' | 'current' | 'upcoming' | 'error'
   }));
 
-  // Custom rendering for RegistrationStepper to make 'Email Verification' static after it's completed
+  // Dark variant: design tokens for landing theme; default: original colors
+  const stepCircleClass = (status: string, clickable: boolean) => {
+    if (isDark) {
+      return cn(
+        'flex items-center justify-center rounded-full border-2 transition-all duration-200 shrink-0',
+        status === 'completed' && 'bg-accent border-accent text-background cursor-default',
+        status === 'current' && 'bg-accent border-accent text-background ring-2 ring-accent/40 ring-offset-2 ring-offset-background cursor-default',
+        status === 'upcoming' && 'bg-muted/60 border-border text-muted-foreground cursor-not-allowed',
+        status === 'error' && 'bg-destructive border-destructive text-destructive-foreground',
+        clickable && status !== 'upcoming' && 'cursor-pointer hover:opacity-90'
+      );
+    }
+    return cn(
+      'flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200',
+      status === 'completed' && 'bg-green-500 border-green-500 text-white cursor-pointer hover:bg-green-600',
+      status === 'current' && 'bg-blue-500 border-blue-500 text-white cursor-default',
+      status === 'upcoming' && 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed',
+      status === 'error' && 'bg-red-500 border-red-500 text-white'
+    );
+  };
+
+  const stepSize = isDark ? 'w-9 h-9' : 'w-10 h-10';
+  const iconSize = isDark ? 'w-4 h-4' : 'w-5 h-5';
+
   return (
     <div className={className}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-0">
         {displaySteps.map((step, index) => {
           const status = (index < adjustedIndex ? 'completed' : index === adjustedIndex ? 'current' : 'upcoming') as 'completed' | 'current' | 'upcoming' | 'error';
           const isEmailVerification = step.id === 'email_sent';
           const isClickable =
             !isEmailVerification
-              ? index <= adjustedIndex && onStepClick
-              : currentStep === 'email_sent' && onStepClick; // Only clickable if currently verifying
+              ? index <= adjustedIndex && !!onStepClick
+              : currentStep === 'email_sent' && !!onStepClick;
           const isLast = index === displaySteps.length - 1;
 
           return (
             <React.Fragment key={step.id}>
-              {/* Step */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center min-w-0 flex-1">
                 {isClickable ? (
                   <button
+                    type="button"
                     onClick={() => handleStepClick(index)}
-                    className={cn(
-                      'flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200',
-                      {
-                        'bg-green-500 border-green-500 text-white cursor-pointer hover:bg-green-600': status === 'completed',
-                        'bg-blue-500 border-blue-500 text-white cursor-default': status === 'current',
-                        'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed': status === 'upcoming',
-                        'bg-red-500 border-red-500 text-white': status === 'error'
-                      }
-                    )}
+                    className={cn(stepSize, stepCircleClass(status, true))}
                   >
                     {status === 'completed' ? (
-                      <Check className="w-5 h-5" />
+                      <Check className={iconSize} />
                     ) : (
-                      <span className="text-sm font-medium">{index + 1}</span>
+                      <span className="text-xs font-semibold">{index + 1}</span>
                     )}
                   </button>
                 ) : (
                   <div
-                    className={cn(
-                      'flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200',
-                      {
-                        'bg-green-500 border-green-500 text-white': status === 'completed',
-                        'bg-blue-500 border-blue-500 text-white': status === 'current',
-                        'bg-gray-200 border-gray-300 text-gray-500': status === 'upcoming',
-                        'bg-red-500 border-red-500 text-white': status === 'error',
-                        'cursor-default': true
-                      }
-                    )}
+                    className={cn(stepSize, stepCircleClass(status, false))}
                     style={{ pointerEvents: 'none' }}
                   >
                     {status === 'completed' ? (
-                      <Check className="w-5 h-5" />
+                      <Check className={iconSize} />
                     ) : (
-                      <span className="text-sm font-medium">{index + 1}</span>
+                      <span className="text-xs font-semibold">{index + 1}</span>
                     )}
                   </div>
                 )}
 
-                <div className="mt-2 text-center">
-                  <h3 className={cn(
-                    'text-sm font-medium',
-                    {
-                      'text-green-600': status === 'completed',
-                      'text-blue-600': status === 'current',
-                      'text-gray-500': status === 'upcoming',
-                      'text-red-600': status === 'error'
-                    }
+                <div className={cn('text-center mt-1.5 min-w-0', isDark ? 'px-0.5' : '')}>
+                  <p className={cn(
+                    'text-xs font-medium truncate',
+                    isDark && status === 'completed' && 'text-accent',
+                    isDark && status === 'current' && 'text-foreground',
+                    isDark && status === 'upcoming' && 'text-muted-foreground',
+                    !isDark && status === 'completed' && 'text-green-600',
+                    !isDark && status === 'current' && 'text-blue-600',
+                    !isDark && status === 'upcoming' && 'text-gray-500',
+                    !isDark && status === 'error' && 'text-red-600'
                   )}>
                     {step.title}
-                  </h3>
+                  </p>
                   {step.description && (
                     <p className={cn(
-                      'text-xs mt-1 max-w-24',
-                      {
-                        'text-green-500': status === 'completed',
-                        'text-blue-500': status === 'current',
-                        'text-gray-400': status === 'upcoming',
-                        'text-red-500': status === 'error'
-                      }
+                      'text-[10px] mt-0.5 truncate max-w-[72px] mx-auto',
+                      isDark && status === 'completed' && 'text-muted-foreground',
+                      isDark && status === 'current' && 'text-muted-foreground',
+                      isDark && status === 'upcoming' && 'text-muted-foreground/70',
+                      !isDark && status === 'completed' && 'text-green-500',
+                      !isDark && status === 'current' && 'text-blue-500',
+                      !isDark && status === 'upcoming' && 'text-gray-400',
+                      !isDark && status === 'error' && 'text-red-500'
                     )}>
                       {step.description}
                     </p>
@@ -402,15 +414,11 @@ export const RegistrationStepper: React.FC<RegistrationStepperProps> = ({
                 </div>
               </div>
 
-              {/* Connector */}
               {!isLast && (
-                <div className="flex-1 mx-4">
+                <div className={cn('h-0.5 shrink-0 self-center', isDark ? 'mx-1.5 w-4 sm:w-6' : 'mx-4 flex-1 min-w-[8px]')}>
                   <div className={cn(
-                    'h-0.5 transition-colors duration-200',
-                    {
-                      'bg-green-500': index < adjustedIndex,
-                      'bg-gray-200': index >= adjustedIndex
-                    }
+                    'h-full w-full rounded-full transition-colors duration-200',
+                    index < adjustedIndex ? (isDark ? 'bg-accent' : 'bg-green-500') : (isDark ? 'bg-border' : 'bg-gray-200')
                   )} />
                 </div>
               )}

@@ -46,15 +46,17 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Buttons - Better spacing */}
+          {/* CTA Buttons - Better spacing (hide Login on register page) */}
           <div className="hidden md:flex items-center gap-4 lg:gap-5">
-            <button
-              type="button"
-              className="btn-glass px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-foreground"
-              onClick={() => navigate('/auth/register')}
-            >
-              Login
-            </button>
+            {location.pathname !== '/auth/register' && (
+              <button
+                type="button"
+                className="btn-glass px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-foreground"
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </button>
+            )}
             <button
               type="button"
               className="btn-gradient px-5 py-2.5 rounded-xl text-sm lg:text-base font-medium text-white"
@@ -93,16 +95,18 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <button
-                  type="button"
-                  className="btn-glass px-4 py-3 rounded-xl text-base font-medium text-foreground w-full"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    navigate('/auth/register');
-                  }}
-                >
-                  Login
-                </button>
+                {location.pathname !== '/auth/register' && (
+                  <button
+                    type="button"
+                    className="btn-glass px-4 py-3 rounded-xl text-base font-medium text-foreground w-full"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/login');
+                    }}
+                  >
+                    Login
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn-gradient px-4 py-3 rounded-xl text-base font-medium text-white w-full"
