@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { API_BASE_URL } from "@/lib/api";
+const API_BASE_URL  = import.meta.env.VITE_API_URL || "";
 
 function getToken(): string | null {
   return localStorage.getItem("token") || localStorage.getItem("accessToken");
