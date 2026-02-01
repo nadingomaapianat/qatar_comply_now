@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api";
+const API_BASE_URL  = import.meta.env.VITE_API_URL || "";
 
 async function getCsrfToken(): Promise<string> {
     const response = await fetch(`${API_BASE_URL}/csrf/token`, { method: "GET", credentials: "include" });
