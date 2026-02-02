@@ -698,13 +698,11 @@ const KnowMyOrg = () => {
       setOriginalFormData(formData);
       setHasAnalyzed(true);
       
-      // Reset loading step before navigation
-      setStep('input');
+      // Show review card first, then user can proceed to business objectives
+      setStep('review');
       
-      // Navigate to business objectives step
-      if (currentStep === 'organization_info' || currentStep === 'personal_info') {
-        goToStep('business_objectives', true);
-      }
+      // Keep current step as organization_info so review card shows
+      // User will click "Continue to Business Objectives" to proceed
     } catch (err: any) {
       toast.error(err.message || 'Error in registration flow');
       setStep('input');
@@ -1211,7 +1209,12 @@ const KnowMyOrg = () => {
         title="Select Business Objectives"
         description="Select the business objectives that apply to your organization"
         onNext={handleBusinessObjectivesNext}
-        onPrevious={() => goToStep('organization_info')}
+        onPrevious={() => {
+          goToStep('organization_info');
+          if (hasAnalyzed) {
+            setStep('review');
+          }
+        }}
         nextLabel="Continue"
         previousLabel="Back"
         isNextDisabled={selectedBusinessObjectives.size === 0}
@@ -1556,8 +1559,8 @@ const KnowMyOrg = () => {
     );
   }
 
-  // Review step (legacy - for backward compatibility, but should not be reached in new flow)
-  if (step === 'review' && !isBusinessObjectivesStep && !isComplianceObjectivesStep) {
+  // Review step - show organization review card after organization is analyzed
+  if (isOrganizationStep && step === 'review' && !isBusinessObjectivesStep && !isComplianceObjectivesStep) {
     return (
       <StepperLayout
         variant="landing"
@@ -1572,9 +1575,9 @@ const KnowMyOrg = () => {
       >
         <div className="w-full space-y-6">
           {/* Comprehensive AI Data Display */}
-          <Card className="border border-border rounded-lg shadow-sm relative bg-card/50">
-            <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-lg"></div>
-            <CardHeader className="border-b border-border pb-4 pt-6">
+          <Card className="glass border border-border rounded-xl shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-xl"></div>
+            <CardHeader className="border-b border-border pb-4 pt-6 bg-background/30">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-accent/20 rounded-lg">
                   <Database className="w-5 h-5 text-accent" />
@@ -1584,7 +1587,7 @@ const KnowMyOrg = () => {
                 </CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-6 space-y-6 bg-background/20">
               
               {/* Basic Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1611,14 +1614,14 @@ const KnowMyOrg = () => {
                       <Input
                         value={editingValue}
                         onChange={(e) => handleDataInputChange(e.target.value)}
-                        className="h-8 text-sm"
+                        className="h-8 text-sm bg-background/80 border-border text-foreground"
                         placeholder="Enter organization name"
                       />
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           onClick={() => handleDataSave('organization_name.value')}
-                          className="bg-teal-600 hover:bg-teal-700 text-white text-xs"
+                          className="btn-gradient text-white text-xs"
                         >
                           Save
                         </Button>
@@ -1626,7 +1629,7 @@ const KnowMyOrg = () => {
                           variant="outline"
                           size="sm"
                           onClick={handleDataCancel}
-                          className="text-xs"
+                          className="text-xs border-border"
                         >
                           Cancel
                         </Button>
@@ -1634,24 +1637,24 @@ const KnowMyOrg = () => {
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {editableCompanyData?.organization_name?.value || companyData?.organization_name?.value || 'Not specified'}
+                      <p className="text-sm text-foreground mb-2">
+                        {editableCompanyData?.organization_name?.value || companyData?.organization_name?.value || <span className="text-muted-foreground italic">Not specified</span>}
                       </p>
                       {(editableCompanyData?.organization_name?.source || companyData?.organization_name?.source)?.length > 0 && (
                         <div className="space-y-2">
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{(editableCompanyData?.organization_name?.source || companyData?.organization_name?.source).length} source(s)</span>
                           </div>
                           <div className="space-y-1">
                             {(editableCompanyData?.organization_name?.source || companyData?.organization_name?.source).map((source: string, index: number) => (
                               <div key={index} className="flex items-center space-x-2 text-xs">
-                                <ExternalLink className="w-3 h-3 text-teal-500" />
+                                <ExternalLink className="w-3 h-3 text-accent" />
                                 <a 
                                   href={source} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-teal-600 hover:text-teal-800 underline truncate"
+                                  className="text-accent hover:text-accent/80 underline truncate"
                                   title={source}
                                 >
                                   {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1666,31 +1669,31 @@ const KnowMyOrg = () => {
                 </div>
 
                 {/* Institution ID */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-teal-100 rounded-lg">
-                      <FileText className="w-4 h-4 text-teal-600" />
+                    <div className="p-2 bg-accent/20 rounded-lg">
+                      <FileText className="w-4 h-4 text-accent" />
                     </div>
-                    <h4 className="text-sm font-semibold text-gray-900">Institution ID</h4>
+                    <h4 className="text-sm font-semibold text-foreground">Institution ID</h4>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">
-                    {companyData?.institution_id?.value || 'Not specified'}
+                  <p className="text-sm text-foreground mb-2">
+                    {companyData?.institution_id?.value || <span className="text-muted-foreground italic">Not specified</span>}
                   </p>
                   {companyData?.institution_id?.source?.length > 0 && (
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-1 text-xs text-gray-500">
+                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                         <Link className="w-3 h-3" />
                         <span>{companyData.institution_id.source.length} source(s)</span>
                       </div>
                       <div className="space-y-1">
                         {companyData.institution_id.source.map((source: string, index: number) => (
                           <div key={index} className="flex items-center space-x-2 text-xs">
-                            <ExternalLink className="w-3 h-3 text-teal-500" />
+                            <ExternalLink className="w-3 h-3 text-accent" />
                             <a 
                               href={source} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-teal-600 hover:text-teal-800 underline truncate"
+                              className="text-accent hover:text-accent/80 underline truncate"
                               title={source}
                             >
                               {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1703,13 +1706,13 @@ const KnowMyOrg = () => {
                 </div>
 
                 {/* Entity Type */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-teal-100 rounded-lg">
-                        <Shield className="w-4 h-4 text-teal-600" />
+                      <div className="p-2 bg-accent/20 rounded-lg">
+                        <Shield className="w-4 h-4 text-accent" />
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900">Entity Type</h4>
+                      <h4 className="text-sm font-semibold text-foreground">Entity Type</h4>
                     </div>
                     <Button
                       variant="ghost"
@@ -1725,14 +1728,14 @@ const KnowMyOrg = () => {
                       <Input
                         value={editingValue}
                         onChange={(e) => handleDataInputChange(e.target.value)}
-                        className="h-8 text-sm"
+                        className="h-8 text-sm bg-background/80 border-border text-foreground"
                         placeholder="Enter entity type"
                       />
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           onClick={() => handleDataSave('entity_type.value')}
-                          className="bg-teal-600 hover:bg-teal-700 text-white text-xs"
+                          className="btn-gradient text-white text-xs"
                         >
                           Save
                         </Button>
@@ -1740,7 +1743,7 @@ const KnowMyOrg = () => {
                           variant="outline"
                           size="sm"
                           onClick={handleDataCancel}
-                          className="text-xs"
+                          className="text-xs border-border"
                         >
                           Cancel
                         </Button>
@@ -1748,24 +1751,24 @@ const KnowMyOrg = () => {
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {editableCompanyData?.entity_type?.value || companyData?.entity_type?.value || 'Not specified'}
+                      <p className="text-sm text-foreground mb-2">
+                        {editableCompanyData?.entity_type?.value || companyData?.entity_type?.value || <span className="text-muted-foreground italic">Not specified</span>}
                       </p>
                       {(editableCompanyData?.entity_type?.source || companyData?.entity_type?.source)?.length > 0 && (
                         <div className="space-y-2">
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{(editableCompanyData?.entity_type?.source || companyData?.entity_type?.source).length} source(s)</span>
                           </div>
                           <div className="space-y-1">
                             {(editableCompanyData?.entity_type?.source || companyData?.entity_type?.source).map((source: string, index: number) => (
                               <div key={index} className="flex items-center space-x-2 text-xs">
-                                <ExternalLink className="w-3 h-3 text-teal-500" />
+                                <ExternalLink className="w-3 h-3 text-accent" />
                                 <a 
                                   href={source} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-teal-600 hover:text-teal-800 underline truncate"
+                                  className="text-accent hover:text-accent/80 underline truncate"
                                   title={source}
                                 >
                                   {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1780,13 +1783,13 @@ const KnowMyOrg = () => {
                 </div>
 
                 {/* Headquarters Country */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-teal-100 rounded-lg">
-                        <MapPin className="w-4 h-4 text-teal-600" />
+                      <div className="p-2 bg-accent/20 rounded-lg">
+                        <MapPin className="w-4 h-4 text-accent" />
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900">Headquarters</h4>
+                      <h4 className="text-sm font-semibold text-foreground">Headquarters</h4>
                     </div>
                     <Button
                       variant="ghost"
@@ -1802,14 +1805,14 @@ const KnowMyOrg = () => {
                       <Input
                         value={editingValue}
                         onChange={(e) => handleDataInputChange(e.target.value)}
-                        className="h-8 text-sm"
+                        className="h-8 text-sm bg-background/80 border-border text-foreground"
                         placeholder="Enter headquarters country"
                       />
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           onClick={() => handleDataSave('headquarters_country.value')}
-                          className="bg-teal-600 hover:bg-teal-700 text-white text-xs"
+                          className="btn-gradient text-white text-xs"
                         >
                           Save
                         </Button>
@@ -1817,7 +1820,7 @@ const KnowMyOrg = () => {
                           variant="outline"
                           size="sm"
                           onClick={handleDataCancel}
-                          className="text-xs"
+                          className="text-xs border-border"
                         >
                           Cancel
                         </Button>
@@ -1834,23 +1837,23 @@ const KnowMyOrg = () => {
                             className="rounded"
                           />
                         )}
-                                                <p className="text-sm text-gray-700">{editableCompanyData?.headquarters_country?.value || companyData?.headquarters_country?.value || 'Not specified'}</p>
-                  </div>
+                        <p className="text-sm text-foreground">{editableCompanyData?.headquarters_country?.value || companyData?.headquarters_country?.value || <span className="text-muted-foreground italic">Not specified</span>}</p>
+                      </div>
                       {(editableCompanyData?.headquarters_country?.source || companyData?.headquarters_country?.source)?.length > 0 && (
                         <div className="space-y-2">
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{(editableCompanyData?.headquarters_country?.source || companyData?.headquarters_country?.source).length} source(s)</span>
                           </div>
                           <div className="space-y-1">
                             {(editableCompanyData?.headquarters_country?.source || companyData?.headquarters_country?.source).map((source: string, index: number) => (
                               <div key={index} className="flex items-center space-x-2 text-xs">
-                                <ExternalLink className="w-3 h-3 text-teal-500" />
+                                <ExternalLink className="w-3 h-3 text-accent" />
                                 <a 
                                   href={source} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-teal-600 hover:text-teal-800 underline truncate"
+                                  className="text-accent hover:text-accent/80 underline truncate"
                                   title={source}
                                 >
                                   {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1865,13 +1868,13 @@ const KnowMyOrg = () => {
                 </div>
 
                 {/* Industry Sectors */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-teal-100 rounded-lg">
-                        <Target className="w-4 h-4 text-teal-600" />
+                      <div className="p-2 bg-accent/20 rounded-lg">
+                        <Target className="w-4 h-4 text-accent" />
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900">Industry Sectors</h4>
+                      <h4 className="text-sm font-semibold text-foreground">Industry Sectors</h4>
                     </div>
                     <Button
                       variant="ghost"
@@ -1887,14 +1890,14 @@ const KnowMyOrg = () => {
                       <Input
                         value={editingValue}
                         onChange={(e) => handleDataInputChange(e.target.value)}
-                        className="h-8 text-sm"
+                        className="h-8 text-sm bg-background/80 border-border text-foreground"
                         placeholder="Enter industry sectors (comma separated)"
                       />
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           onClick={() => handleDataSave('industry_sectors.value')}
-                          className="bg-teal-600 hover:bg-teal-700 text-white text-xs"
+                          className="btn-gradient text-white text-xs"
                         >
                           Save
                         </Button>
@@ -1902,7 +1905,7 @@ const KnowMyOrg = () => {
                           variant="outline"
                           size="sm"
                           onClick={handleDataCancel}
-                          className="text-xs"
+                          className="text-xs border-border"
                         >
                           Cancel
                         </Button>
@@ -1910,24 +1913,24 @@ const KnowMyOrg = () => {
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {(editableCompanyData?.industry_sectors?.value || companyData?.industry_sectors?.value || []).join(', ') || 'Not specified'}
+                      <p className="text-sm text-foreground mb-2">
+                        {(editableCompanyData?.industry_sectors?.value || companyData?.industry_sectors?.value || []).join(', ') || <span className="text-muted-foreground italic">Not specified</span>}
                       </p>
                       {(editableCompanyData?.industry_sectors?.source || companyData?.industry_sectors?.source)?.length > 0 && (
                         <div className="space-y-2">
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{(editableCompanyData?.industry_sectors?.source || companyData?.industry_sectors?.source).length} source(s)</span>
                           </div>
                           <div className="space-y-1">
                             {(editableCompanyData?.industry_sectors?.source || companyData?.industry_sectors?.source).map((source: string, index: number) => (
                               <div key={index} className="flex items-center space-x-2 text-xs">
-                                <ExternalLink className="w-3 h-3 text-teal-500" />
+                                <ExternalLink className="w-3 h-3 text-accent" />
                                 <a 
                                   href={source} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-teal-600 hover:text-teal-800 underline truncate"
+                                  className="text-accent hover:text-accent/80 underline truncate"
                                   title={source}
                                 >
                                   {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1942,31 +1945,31 @@ const KnowMyOrg = () => {
                 </div>
 
                 {/* Company Size */}
-                <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-teal-100 rounded-lg">
-                      <Users className="w-4 h-4 text-teal-600" />
+                    <div className="p-2 bg-accent/20 rounded-lg">
+                      <Users className="w-4 h-4 text-accent" />
                     </div>
-                    <h4 className="text-sm font-semibold text-gray-900">Company Size</h4>
+                    <h4 className="text-sm font-semibold text-foreground">Company Size</h4>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">
-                    {companyData?.company_size?.value?.employees || 'Not specified'}
+                  <p className="text-sm text-foreground mb-2">
+                    {companyData?.company_size?.value?.employees || <span className="text-muted-foreground italic">Not specified</span>}
                   </p>
                   {companyData?.company_size?.source?.length > 0 && (
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-1 text-xs text-gray-500">
+                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                         <Link className="w-3 h-3" />
                         <span>{companyData.company_size.source.length} source(s)</span>
                       </div>
                       <div className="space-y-1">
                         {companyData.company_size.source.map((source: string, index: number) => (
                           <div key={index} className="flex items-center space-x-2 text-xs">
-                            <ExternalLink className="w-3 h-3 text-teal-500" />
+                            <ExternalLink className="w-3 h-3 text-accent" />
                             <a 
                               href={source} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-teal-600 hover:text-teal-800 underline truncate"
+                              className="text-accent hover:text-accent/80 underline truncate"
                               title={source}
                             >
                               {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -1983,15 +1986,15 @@ const KnowMyOrg = () => {
               {(editableCompanyData?.key_services?.value || companyData?.key_services?.value)?.length > 0 && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                      <TrendingUp className="w-5 h-5 text-teal-600" />
+                    <h3 className="text-lg font-semibold text-foreground flex items-center space-x-2">
+                      <TrendingUp className="w-5 h-5 text-accent" />
                       <span>Key Services ({(editableCompanyData?.key_services?.value || companyData?.key_services?.value).length})</span>
                     </h3>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleDataEdit('key_services.value')}
-                      className="text-teal-600 border-teal-600 hover:bg-teal-600 hover:text-white"
+                      className="text-accent border-accent hover:bg-accent hover:text-white"
                     >
                       <Edit className="w-4 h-4 mr-1" />
                       Edit All
@@ -2002,14 +2005,14 @@ const KnowMyOrg = () => {
                       <Input
                         value={editingValue}
                         onChange={(e) => handleDataInputChange(e.target.value)}
-                        className="h-10 text-sm"
+                        className="h-10 text-sm bg-background/80 border-border text-foreground"
                         placeholder="Enter key services (comma separated)"
                       />
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           onClick={() => handleDataSave('key_services.value')}
-                          className="bg-teal-600 hover:bg-teal-700 text-white"
+                          className="btn-gradient text-white"
                         >
                           Save All
                         </Button>
@@ -2017,6 +2020,7 @@ const KnowMyOrg = () => {
                           variant="outline"
                           size="sm"
                           onClick={handleDataCancel}
+                          className="border-border"
                         >
                           Cancel
                         </Button>
@@ -2025,16 +2029,16 @@ const KnowMyOrg = () => {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {(editableCompanyData?.key_services?.value || companyData?.key_services?.value).map((service: string, index: number) => (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                        <div key={index} className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                           <div className="flex items-center space-x-3 mb-3">
-                            <div className="p-2 bg-teal-100 rounded-lg">
-                              <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                            <div className="p-2 bg-accent/20 rounded-lg">
+                              <div className="w-2 h-2 bg-accent rounded-full"></div>
                             </div>
-                            <h4 className="text-sm font-semibold text-gray-900">Service {index + 1}</h4>
+                            <h4 className="text-sm font-semibold text-foreground">Service {index + 1}</h4>
                           </div>
-                          <p className="text-sm text-gray-700 mb-2">{service}</p>
+                          <p className="text-sm text-foreground mb-2">{service}</p>
                           {(editableCompanyData?.key_services?.source || companyData?.key_services?.source)?.length > 0 && (
-                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                               <Link className="w-3 h-3" />
                               <span>{(editableCompanyData?.key_services?.source || companyData?.key_services?.source).length} source(s)</span>
                             </div>
@@ -2050,15 +2054,15 @@ const KnowMyOrg = () => {
               {(editableCompanyData?.regulatory_details || companyData?.regulatory_details) && Object.keys(editableCompanyData?.regulatory_details || companyData?.regulatory_details).length > 0 && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                      <Shield className="w-5 h-5 text-teal-600" />
+                    <h3 className="text-lg font-semibold text-foreground flex items-center space-x-2">
+                      <Shield className="w-5 h-5 text-accent" />
                       <span>Regulatory Information</span>
                     </h3>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleDataEdit('regulatory_details')}
-                      className="text-teal-600 border-teal-600 hover:bg-teal-600 hover:text-white"
+                      className="text-accent border-accent hover:bg-accent hover:text-white"
                     >
                       <Edit className="w-4 h-4 mr-1" />
                       Edit All
@@ -2067,13 +2071,13 @@ const KnowMyOrg = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Supervisory Authority */}
                     {(editableCompanyData?.regulatory_details?.supervisory_authority?.value || companyData?.regulatory_details?.supervisory_authority?.value) && (
-                      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                      <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
-                            <div className="p-2 bg-teal-100 rounded-lg">
-                              <Award className="w-4 h-4 text-teal-600" />
+                            <div className="p-2 bg-accent/20 rounded-lg">
+                              <Award className="w-4 h-4 text-accent" />
                             </div>
-                            <h4 className="text-sm font-semibold text-gray-900">Supervisory Authority</h4>
+                            <h4 className="text-sm font-semibold text-foreground">Supervisory Authority</h4>
                           </div>
                           <Button
                             variant="ghost"
@@ -2096,10 +2100,10 @@ const KnowMyOrg = () => {
                               <Button
                                 size="sm"
                                 onClick={() => handleDataSave('regulatory_details.supervisory_authority.value')}
-                                className="bg-teal-600 hover:bg-teal-700 text-white text-xs"
-                              >
-                                Save
-                              </Button>
+                          className="btn-gradient text-white text-xs"
+                        >
+                          Save
+                        </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -2112,11 +2116,11 @@ const KnowMyOrg = () => {
                           </div>
                         ) : (
                           <>
-                            <p className="text-sm text-gray-700 mb-2">
+                            <p className="text-sm text-foreground mb-2">
                               {editableCompanyData?.regulatory_details?.supervisory_authority?.value || companyData?.regulatory_details?.supervisory_authority?.value}
                             </p>
                             {(editableCompanyData?.regulatory_details?.supervisory_authority?.source || companyData?.regulatory_details?.supervisory_authority?.source)?.length > 0 && (
-                              <div className="flex items-center space-x-1 text-xs text-gray-500">
+                              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                                 <Link className="w-3 h-3" />
                                 <span>{(editableCompanyData?.regulatory_details?.supervisory_authority?.source || companyData?.regulatory_details?.supervisory_authority?.source).length} source(s)</span>
                               </div>
@@ -2128,18 +2132,18 @@ const KnowMyOrg = () => {
 
                     {/* Parent Company */}
                     {companyData.regulatory_details.financial_metrics?.corporate_structure?.parent_company?.value && (
-                      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                      <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                         <div className="flex items-center space-x-3 mb-3">
-                          <div className="p-2 bg-teal-100 rounded-lg">
-                            <Building2 className="w-4 h-4 text-teal-600" />
+                          <div className="p-2 bg-accent/20 rounded-lg">
+                            <Building2 className="w-4 h-4 text-accent" />
                           </div>
-                          <h4 className="text-sm font-semibold text-gray-900">Parent Company</h4>
+                          <h4 className="text-sm font-semibold text-foreground">Parent Company</h4>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">
+                        <p className="text-sm text-foreground mb-2">
                           {companyData.regulatory_details.financial_metrics.corporate_structure.parent_company.value}
                         </p>
                         {companyData.regulatory_details.financial_metrics.corporate_structure.parent_company.source?.length > 0 && (
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{companyData.regulatory_details.financial_metrics.corporate_structure.parent_company.source.length} source(s)</span>
                           </div>
@@ -2149,18 +2153,18 @@ const KnowMyOrg = () => {
 
                     {/* Website */}
                     {companyData.regulatory_details.financial_metrics?.corporate_structure?.contact_information?.website?.value && (
-                      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                      <div className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                         <div className="flex items-center space-x-3 mb-3">
-                          <div className="p-2 bg-teal-100 rounded-lg">
-                            <Globe className="w-4 h-4 text-teal-600" />
+                          <div className="p-2 bg-accent/20 rounded-lg">
+                            <Globe className="w-4 h-4 text-accent" />
                           </div>
-                          <h4 className="text-sm font-semibold text-gray-900">Website</h4>
+                          <h4 className="text-sm font-semibold text-foreground">Website</h4>
                         </div>
-                        <p className="text-sm text-gray-700 mb-2">
+                        <p className="text-sm text-foreground mb-2">
                           {companyData.regulatory_details.financial_metrics.corporate_structure.contact_information.website.value}
                         </p>
                         {companyData.regulatory_details.financial_metrics.corporate_structure.contact_information.website.source?.length > 0 && (
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{companyData.regulatory_details.financial_metrics.corporate_structure.contact_information.website.source.length} source(s)</span>
                           </div>
@@ -2176,45 +2180,45 @@ const KnowMyOrg = () => {
           </Card>
 
           {/* Key Services Card */}
-          <Card className="border border-gray-200 rounded-lg shadow-sm relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 rounded-t-lg"></div>
-            <CardHeader className="border-b border-gray-200 pb-4 pt-6">
+          <Card className="glass border border-border rounded-xl shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-xl"></div>
+            <CardHeader className="border-b border-border pb-4 pt-6 bg-background/30">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-teal-100 rounded-lg">
-                  <TrendingUp className="w-5 h-5 text-teal-600" />
+                <div className="p-2 bg-accent/20 rounded-lg">
+                  <TrendingUp className="w-5 h-5 text-accent" />
                 </div>
-                <CardTitle className="text-lg font-semibold text-gray-900">
+                <CardTitle className="text-lg font-semibold text-foreground">
                   Key Services ({companyData?.key_services?.value?.length || 0})
                 </CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-6 bg-background/20">
               {companyData?.key_services?.value?.length ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {companyData.key_services.value.map((service, index) => (
-                    <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 hover:shadow-md transition-all duration-200">
+                    <div key={index} className="bg-background/40 border border-border rounded-lg p-4 hover:border-accent/50 hover:shadow-md transition-all duration-200 glass">
                       <div className="flex items-center space-x-3 mb-3">
-                        <div className="p-2 bg-teal-100 rounded-lg">
-                          <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+                        <div className="p-2 bg-accent/20 rounded-lg">
+                          <div className="w-2 h-2 bg-accent rounded-full"></div>
                         </div>
-                        <h4 className="text-sm font-semibold text-gray-900">Service {index + 1}</h4>
+                        <h4 className="text-sm font-semibold text-foreground">Service {index + 1}</h4>
                       </div>
-                      <p className="text-sm text-gray-700 mb-2">{service}</p>
+                      <p className="text-sm text-foreground mb-2">{service}</p>
                       {companyData.key_services.source?.length > 0 && (
                         <div className="space-y-2">
-                          <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                             <Link className="w-3 h-3" />
                             <span>{companyData.key_services.source.length} source(s)</span>
                           </div>
                           <div className="space-y-1">
                             {companyData.key_services.source.map((source: string, index: number) => (
                               <div key={index} className="flex items-center space-x-2 text-xs">
-                                <ExternalLink className="w-3 h-3 text-teal-500" />
+                                <ExternalLink className="w-3 h-3 text-accent" />
                                 <a 
                                   href={source} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-teal-600 hover:text-teal-800 underline truncate"
+                                  className="text-accent hover:text-accent/80 underline truncate"
                                   title={source}
                                 >
                                   {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -2228,50 +2232,50 @@ const KnowMyOrg = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500">No services specified</div>
+                <div className="text-sm text-muted-foreground">No services specified</div>
               )}
             </CardContent>
           </Card>
 
           {/* Recent Press/News Card */}
           {companyData?.recent_press?.value?.length > 0 && (
-            <Card className="border border-gray-200 rounded-lg shadow-sm relative">
-              <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 rounded-t-lg"></div>
-              <CardHeader className="border-b border-gray-200 pb-4 pt-6">
+            <Card className="glass border border-border rounded-xl shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-xl"></div>
+              <CardHeader className="border-b border-border pb-4 pt-6 bg-background/30">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-teal-100 rounded-lg">
-                    <FileText className="w-5 h-5 text-teal-600" />
+                  <div className="p-2 bg-accent/20 rounded-lg">
+                    <FileText className="w-5 h-5 text-accent" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">
+                  <CardTitle className="text-lg font-semibold text-foreground">
                     Recent Press & News ({companyData.recent_press.value.length})
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-6 bg-background/20">
                 <div className="space-y-3">
                   {companyData.recent_press.value.map((press: any, index: number) => (
                     <div key={index} className="flex items-start space-x-3">
-                      <FileText className="w-4 h-4 text-teal-500 mt-0.5 flex-shrink-0" />
+                      <FileText className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-sm text-gray-700 font-medium">{press.title || press}</p>
+                        <p className="text-sm text-foreground font-medium">{press.title || press}</p>
                         {press.description && (
-                          <p className="text-xs text-gray-600 mt-1">{press.description}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{press.description}</p>
                         )}
                         {companyData.recent_press.source?.length > 0 && (
                           <div className="space-y-2 mt-1">
-                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                               <Link className="w-3 h-3" />
                               <span>{companyData.recent_press.source.length} source(s)</span>
                             </div>
                             <div className="space-y-1">
                               {companyData.recent_press.source.map((source: string, index: number) => (
                                 <div key={index} className="flex items-center space-x-2 text-xs">
-                                  <ExternalLink className="w-3 h-3 text-teal-500" />
+                                  <ExternalLink className="w-3 h-3 text-accent" />
                                   <a 
                                     href={source} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-teal-600 hover:text-teal-800 underline truncate"
+                                    className="text-accent hover:text-accent/80 underline truncate"
                                     title={source}
                                   >
                                     {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -2291,40 +2295,40 @@ const KnowMyOrg = () => {
 
           {/* Regulatory Registrations Card */}
           {companyData?.regulatory_registrations?.value?.length > 0 && (
-            <Card className="border border-gray-200 rounded-lg shadow-sm relative">
-              <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 rounded-t-lg"></div>
-              <CardHeader className="border-b border-gray-200 pb-4 pt-6">
+            <Card className="glass border border-border rounded-xl shadow-lg relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-xl"></div>
+              <CardHeader className="border-b border-border pb-4 pt-6 bg-background/30">
                 <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-teal-100 rounded-lg">
-                    <FileCheck className="w-5 h-5 text-teal-600" />
+                  <div className="p-2 bg-accent/20 rounded-lg">
+                    <FileCheck className="w-5 h-5 text-accent" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">
+                  <CardTitle className="text-lg font-semibold text-foreground">
                     Regulatory Registrations ({companyData.regulatory_registrations.value.length})
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-6 bg-background/20">
                 <div className="space-y-3">
                   {companyData.regulatory_registrations.value.map((registration, index) => (
                     <div key={index} className="flex items-start space-x-3">
-                      <CheckCircle className="w-4 h-4 text-teal-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-sm text-gray-700">{registration}</p>
+                        <p className="text-sm text-foreground">{registration}</p>
                         {companyData.regulatory_registrations.source?.length > 0 && (
                           <div className="space-y-2 mt-1">
-                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                               <Link className="w-3 h-3" />
                               <span>{companyData.regulatory_registrations.source.length} source(s)</span>
                             </div>
                             <div className="space-y-1">
                               {companyData.regulatory_registrations.source.map((source: string, index: number) => (
                                 <div key={index} className="flex items-center space-x-2 text-xs">
-                                  <ExternalLink className="w-3 h-3 text-teal-500" />
+                                  <ExternalLink className="w-3 h-3 text-accent" />
                                   <a 
                                     href={source} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-teal-600 hover:text-teal-800 underline truncate"
+                                    className="text-accent hover:text-accent/80 underline truncate"
                                     title={source}
                                   >
                                     {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -2343,41 +2347,41 @@ const KnowMyOrg = () => {
           )}
 
           {/* Certifications Card */}
-          <Card className="border border-gray-200 rounded-lg shadow-sm relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 rounded-t-lg"></div>
-            <CardHeader className="border-b border-gray-200 pb-4 pt-6">
+          <Card className="glass border border-border rounded-xl shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-accent rounded-t-xl"></div>
+            <CardHeader className="border-b border-border pb-4 pt-6 bg-background/30">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-teal-100 rounded-lg">
-                  <Shield className="w-5 h-5 text-teal-600" />
+                <div className="p-2 bg-accent/20 rounded-lg">
+                  <Shield className="w-5 h-5 text-accent" />
                 </div>
-                <CardTitle className="text-lg font-semibold text-gray-900">
+                <CardTitle className="text-lg font-semibold text-foreground">
                   Certifications ({companyData?.compliance_certifications?.value?.length || 0})
                 </CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-6 bg-background/20">
               <div className="space-y-3">
                 {companyData?.compliance_certifications?.value?.length ? (
                   companyData.compliance_certifications.value.map((cert, index) => (
                     <div key={index} className="flex items-start space-x-3">
-                      <CheckCircle className="w-4 h-4 text-teal-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <p className="text-sm text-gray-700">{cert}</p>
+                        <p className="text-sm text-foreground">{cert}</p>
                         {companyData.compliance_certifications.source?.length > 0 && (
                           <div className="space-y-2 mt-1">
-                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                               <Link className="w-3 h-3" />
                               <span>{companyData.compliance_certifications.source.length} source(s)</span>
                             </div>
                             <div className="space-y-1">
                               {companyData.compliance_certifications.source.map((source: string, index: number) => (
                                 <div key={index} className="flex items-center space-x-2 text-xs">
-                                  <ExternalLink className="w-3 h-3 text-teal-500" />
+                                  <ExternalLink className="w-3 h-3 text-accent" />
                                   <a 
                                     href={source} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-teal-600 hover:text-teal-800 underline truncate"
+                                    className="text-accent hover:text-accent/80 underline truncate"
                                     title={source}
                                   >
                                     {source.length > 40 ? source.substring(0, 40) + '...' : source}
@@ -2391,7 +2395,7 @@ const KnowMyOrg = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="text-sm text-gray-500">No certifications specified</div>
+                  <div className="text-sm text-muted-foreground">No certifications specified</div>
                 )}
               </div>
             </CardContent>
