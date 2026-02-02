@@ -77,6 +77,7 @@ const RateAssessment = () => {
   const [answers, setAnswers] = useState<Record<string, string | string[] | number | boolean>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [noQuestions, setNoQuestions] = useState(false);
+  const [assessmentCompleted, setAssessmentCompleted] = useState(false);
 
   // Flatten all questions for navigation
   const allQuestions: Question[] = surveys
@@ -170,11 +171,75 @@ const RateAssessment = () => {
     window.location.href = import.meta.env.VITE_REGTECH_URL || 'https://go.comply.now/';
   };
 
+  const handleBackToQuestions = () => {
+    setAssessmentCompleted(false);
+    // Navigate to the last question
+    if (allQuestions.length > 0) {
+      setCurrentIndex(allQuestions.length - 1);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-background">
         <Loader2 className="w-12 h-12 text-accent animate-spin" />
       </div>
+    );
+  }
+
+  if (assessmentCompleted) {
+    return (
+      <StepperLayout
+        variant="landing"
+        showHeader={false}
+        title="Assessment Completed"
+        description="Thank you for completing the assessment"
+        showStepper={true}
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="rounded-xl border border-border overflow-hidden bg-background/40 flex flex-col items-center justify-center py-12 px-6 text-center">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-accent/20 border border-accent/30">
+              <svg
+                className="w-10 h-10 text-accent"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
+              Assessment Completed Successfully!
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-md mb-8">
+              You have successfully completed the initial assessment. You can now proceed to RegTech to continue your compliance journey.
+            </p>
+            <div className="flex gap-4 flex-wrap justify-center">
+              <button
+                type="button"
+                onClick={handleBackToQuestions}
+                className="flex items-center gap-2 border border-border px-6 py-3 rounded-xl text-foreground hover:bg-muted transition-colors font-medium"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Back to Questions
+              </button>
+              <button
+                type="button"
+                onClick={handleGoToRegtech}
+                className="btn-gradient flex items-center gap-2 text-white px-8 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity"
+              >
+                Go to RegTech
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </StepperLayout>
     );
   }
 
@@ -284,19 +349,14 @@ const RateAssessment = () => {
       // Call endAssessment when all questions are answered and submitted
       const token = window.history.state && window.history.state.usr && window.history.state.usr.token;
       if (token) {
-        const endResult = await endAssessment(token);
-        // Save the token from the response as d_c_c_t in localStorage
-        if (endResult && endResult.data && endResult.data.token) {
-          localStorage.removeItem("token");
-          localStorage.setItem("d_c_c_t", endResult.data.token);
-        }
+        await endAssessment(token);
       }
   
       if (result.success) {
         toast({ title: "Submitted successfully", variant: "default" });
         toastify.success("Submitted successfully");
-        // Redirect to external URL
-        window.location.href = import.meta.env.VITE_REGTECH_URL || 'https://go.comply.now/';
+        // Show completion screen instead of redirecting directly
+        setAssessmentCompleted(true);
       } else {
         setError(result.message || "Failed to submit answers");
         toast({ title: result.message || "Failed to submit answers", variant: "destructive" });

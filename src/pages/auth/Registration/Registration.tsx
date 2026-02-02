@@ -6,7 +6,7 @@ import { Mail, Loader2, Sparkles, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRegistration } from '@/context/RegistrationContext';
 import { useNavigate } from 'react-router-dom';
-import { initiateRegistration } from '@/services/steperService';
+import { initiateRegistration, getRegistrationStatus } from '@/services/steperService';
 import Header from '@/components/Header';
 import ParticleField from '@/components/animations/ParticleField';
 import { motion } from 'framer-motion';
@@ -42,11 +42,28 @@ const Registration = () => {
         setUserData({ email: userEmail });
 
         if (step === "completed") {
-          toast({
-            title: "Check regtech app",
-            description: "You can login to regtech app",
-          });
-          navigate("/checkSteps?token=" + token, { state: { registrationData: result.data } });
+          try {
+            // Get the token from registration-steps/status endpoint
+            const statusResult = await getRegistrationStatus(token);
+              const statusToken = statusResult.data.token;
+              
+              // Save the token from status endpoint
+              setToken(statusToken); 
+              navigate("/checkSteps?token=" + statusToken, { 
+                state: { registrationData: statusResult.data } 
+              });
+         
+          } catch (error) {
+            console.error("Error fetching registration status:", error);
+            // Fallback to original token on error
+            toast({
+              title: "Check regtech app",
+              description: "You can login to regtech app",
+            });
+            navigate("/checkSteps?token=" + token, { 
+              state: { registrationData: result.data } 
+            });
+          }
         } else if (step === "email_sent") {
           toast({
             title: "Check your email",
