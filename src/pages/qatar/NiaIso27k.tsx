@@ -14,7 +14,7 @@ import MaturityGauge from '@/components/charts/MaturityGauge';
 const NiaIso27k = () => {
   const breadcrumbItems = [
     { label: 'Qatar Home', href: '/' },
-    { label: 'Banking Sector', href: '/qatar/sector' },
+    { label: 'Financial Sector', href: '/qatar/sector' },
     { label: 'NIA & ISO 27K' },
   ];
 

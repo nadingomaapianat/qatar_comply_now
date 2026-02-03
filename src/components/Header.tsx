@@ -10,7 +10,7 @@ const Header = () => {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/qatar/sector', label: 'Banking Sector' },
+    { href: '/qatar/sector', label: 'Financial Sector' },
     { href: '/qatar/about', label: 'About' },
     { href: '/qatar/pricing', label: 'Pricing' },
     { href: '/qatar/contact', label: 'Contact' },

@@ -16,6 +16,8 @@ import QatarSector from "./pages/qatar/QatarSector";
 import NiaIso27k from "./pages/qatar/NiaIso27k";
 import RiskRegistrySoa from "./pages/qatar/RiskRegistrySoa";
 import PciDssQcb from "./pages/qatar/PciDssQcb";
+import DataProtection from "./pages/qatar/DataProtection";
+import Sustainability from "./pages/qatar/Sustainability";
 
 // Auth & app pages
 import Registration from "./pages/auth/Registration/Registration";
@@ -59,6 +61,8 @@ const App = () => (
             <Route path="/qatar/nia-iso27k" element={<NiaIso27k />} />
             <Route path="/qatar/risk-registry-soa" element={<RiskRegistrySoa />} />
             <Route path="/qatar/pci-dss-qcb" element={<PciDssQcb />} />
+            <Route path="/qatar/data-protection" element={<DataProtection />} />
+            <Route path="/qatar/sustainability" element={<Sustainability />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

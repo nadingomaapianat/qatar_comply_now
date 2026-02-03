@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Shield, FileCheck, BarChart3, Clock, CheckCircle, Zap, RefreshCw, AlertTriangle, Sparkles } from 'lucide-react';
+import { ArrowRight, Shield, FileCheck, BarChart3, Database, Leaf, Clock, CheckCircle, Zap, RefreshCw, AlertTriangle, Sparkles } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AnimatedSection from '@/components/AnimatedSection';
@@ -16,42 +16,51 @@ import AnimatedCounter from '@/components/animations/AnimatedCounter';
 
 const pillars = [
   {
-    icon: FileCheck,
-    title: 'NIA & ISO 27K Certification',
-    description: 'Keep certification on track with evidence and controls in one place, always ready for audits.',
+    icon: Shield,
+    title: 'Operational Resilience & Internal Controls',
+    description: 'QCB internal control expectations, risk register, and SOA in one place.',
     features: [
-      'Centralized evidence repository',
-      'Control mapping to ISO 27001',
-      'Audit preparation workflows',
-      'NIA compliance tracking',
+      'Dynamic risk register & SOA',
+      'Control effectiveness tracking',
+      'Board and regulatory reporting',
     ],
-    route: '/qatar/nia-iso27k',
+    route: '/qatar/risk-registry-soa',
     gradient: 'from-emerald-500/20 to-teal-500/20',
   },
   {
-    icon: BarChart3,
-    title: 'Risk Registry & SOA',
-    description: 'Central risk register and Statement of Applicability that stay up to date with controls and compliance status.',
+    icon: FileCheck,
+    title: 'Cybersecurity & Digital Resilience',
+    description: 'NCSA NIA Standard and ISO 27001 certification support, always audit-ready.',
     features: [
-      'Dynamic risk register',
-      'Auto-updated SOA',
-      'Control effectiveness tracking',
-      'Gap analysis reporting',
+      'NCSA NIA Standard compliance',
+      'ISO 27001 control mapping',
+      'Audit preparation workflows',
     ],
-    route: '/qatar/risk-registry-soa',
+    route: '/qatar/nia-iso27k',
     gradient: 'from-cyan-500/20 to-blue-500/20',
   },
   {
-    icon: Shield,
-    title: 'PCI-DSS & QCB Requirements',
-    description: 'Align with Qatar Central Bank expectations and PCI-DSS in a single workflow.',
+    icon: Database,
+    title: 'Data Protection & Privacy',
+    description: 'PDPPL and QFC Data Protection compliance—consent, ROPA, and DPO workspace.',
     features: [
-      'QCB regulatory mapping',
-      'PCI-DSS v4.0 controls',
-      'Unified compliance dashboard',
-      'Regulatory reporting',
+      'PDPPL (Law 13/2016) & QFC regime',
+      'DPO dashboard & ROPA',
+      'Consent & cross-border management',
     ],
-    route: '/qatar/pci-dss-qcb',
+    route: '/qatar/data-protection',
+    gradient: 'from-amber-500/20 to-orange-500/20',
+  },
+  {
+    icon: Leaf,
+    title: 'Sustainability & ESG Reporting',
+    description: 'QCB ESG Strategy (2024), Sustainable Finance Framework, ISSB reporting from 2026.',
+    features: [
+      'QCB Sustainable Finance Framework',
+      'ISSB (IFRS S1 & S2) from 2026',
+      'Climate and ESG risk analysis',
+    ],
+    route: '/qatar/sustainability',
     gradient: 'from-violet-500/20 to-purple-500/20',
   },
 ];
@@ -290,7 +299,7 @@ const QatarHome = () => {
               className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-8"
               variants={itemVariants}
             >
-              Meet Qatar Central Bank requirements, maintain your risk registry and SOA, and streamline NIA and ISO 27K certification — all in one platform.
+              Meet Qatar Central Bank requirements, maintain your risk registry and SOA, streamline NIA and ISO 27K certification, comply with data protection (PDPPL), and meet sustainability expectations — all in one platform.
             </motion.p>
 
             <motion.div 
@@ -365,10 +374,10 @@ const QatarHome = () => {
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
               Qatar's financial sector faces increasing regulatory pressure. QCB mandates, ISO 27001 certification, 
-              and PCI-DSS compliance are now table stakes for banks and financial institutions operating in Qatar.
+              PCI-DSS, data protection (PDPL), and sustainability expectations are now table stakes for banks operating in Qatar.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {['QCB', 'ISO 27001', 'PCI-DSS'].map((item, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {['QCB', 'ISO 27001', 'PCI-DSS', 'PDPL & ESG'].map((item, index) => (
                 <motion.div
                   key={item}
                   className="glass-card rounded-xl p-6 relative overflow-hidden group cursor-pointer"
@@ -383,7 +392,7 @@ const QatarHome = () => {
                   />
                   <div className="text-3xl font-bold gradient-text mb-1 relative z-10">{item}</div>
                   <p className="text-sm text-muted-foreground relative z-10">
-                    {item === 'QCB' ? 'Central Bank Requirements' : item === 'ISO 27001' ? 'Security Certification' : 'Payment Security'}
+                    {item === 'QCB' ? 'Central Bank Requirements' : item === 'ISO 27001' ? 'Security Certification' : item === 'PCI-DSS' ? 'Payment Security' : 'Data Protection & Sustainability'}
                   </p>
                 </motion.div>
               ))}
@@ -441,11 +450,11 @@ const QatarHome = () => {
               What We <span className="gradient-text">Help With</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Three core pillars to streamline your Qatar compliance journey.
+              Four critical pillars to streamline your Qatar compliance journey.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {pillars.map((pillar, index) => (
               <FloatingCard key={index} delay={index * 0.15}>
                 <Link to={pillar.route} className="block group h-full">
@@ -507,8 +516,91 @@ const QatarHome = () => {
         </div>
       </AnimatedSection>
 
-      {/* Key Benefits with Animated Counters */}
+      {/* Data Protection & Sustainability Highlight Section */}
       <AnimatedSection variant="light">
+        <div className="section-container">
+          <div className="text-center mb-12">
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              New <span className="gradient-text">Regulatory Priorities</span>
+            </motion.h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Data Protection and Sustainability are now essential compliance requirements for Qatar's financial sector.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Data Protection Card */}
+            <FloatingCard delay={0}>
+              <Link to="/qatar/data-protection" className="block group h-full">
+                <motion.div
+                  className="glass-card rounded-2xl p-6 h-full relative overflow-hidden group"
+                  whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(251, 191, 36, 0.2)' }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"
+                  />
+                  <div className="relative z-10">
+                    <motion.div 
+                      className="w-14 h-14 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4"
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Database className="w-7 h-7 text-amber-500" />
+                    </motion.div>
+                    <h3 className="text-xl font-bold mb-2">Data Protection & Privacy</h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      Qatar PDPPL (Law 13/2016) and QFC Data Protection Regulations require robust data governance, DPO designation, and consent management.
+                    </p>
+                    <div className="flex items-center gap-2 text-amber-500 text-sm font-medium group-hover:gap-3 transition-all">
+                      Learn More <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </FloatingCard>
+
+            {/* Sustainability Card */}
+            <FloatingCard delay={0.2}>
+              <Link to="/qatar/sustainability" className="block group h-full">
+                <motion.div
+                  className="glass-card rounded-2xl p-6 h-full relative overflow-hidden group"
+                  whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(139, 92, 246, 0.2)' }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"
+                  />
+                  <div className="relative z-10">
+                    <motion.div 
+                      className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-4"
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <Leaf className="w-7 h-7 text-violet-500" />
+                    </motion.div>
+                    <h3 className="text-xl font-bold mb-2">Sustainability & ESG</h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      QCB's ESG & Sustainability Strategy (2024) and Sustainable Finance Framework. ISSB reporting (IFRS S1 & S2) applies from 2026.
+                    </p>
+                    <div className="flex items-center gap-2 text-violet-500 text-sm font-medium group-hover:gap-3 transition-all">
+                      Learn More <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </FloatingCard>
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* Key Benefits with Animated Counters */}
+      <AnimatedSection variant="dark">
         <div className="section-container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">

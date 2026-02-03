@@ -22,7 +22,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <Link to="/qatar/sector" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Banking Sector
+                  Financial Sector
                 </Link>
               </li>
               <li>
@@ -38,6 +38,16 @@ const Footer = () => {
               <li>
                 <Link to="/qatar/pci-dss-qcb" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   PCI-DSS & QCB
+                </Link>
+              </li>
+              <li>
+                <Link to="/qatar/data-protection" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Data Protection
+                </Link>
+              </li>
+              <li>
+                <Link to="/qatar/sustainability" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Sustainability & ESG
                 </Link>
               </li>
             </ul>

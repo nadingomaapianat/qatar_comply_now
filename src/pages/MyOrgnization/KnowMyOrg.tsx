@@ -11,7 +11,6 @@ import { Building2, Globe, MapPin, Loader2, CheckCircle, Clock,
     Mail, Calendar, DollarSign, BarChart3, Network, Server, Lock, 
     Eye, FileCheck, BookOpen, Target, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { v4 as generateUUID } from 'uuid';
 import { euCountries } from "./countries";
 
 
@@ -20,9 +19,8 @@ const getCountryCode = (countryName: string): string | undefined => {
   const country = euCountries.find(c => c.name.toLowerCase() === countryName.toLowerCase());
   return country?.code;
 };
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import ReactCountryFlag from "react-country-flag";
-import 'react-toastify/dist/ReactToastify.css';
 import { getInformationUserRegister, fetchEntitiesByName } from '@/services/organizationServices';
 import { useRegistration } from '@/context/RegistrationContext';
 import { submitOrganizationInfo, getRegistrationStatus } from '@/services/steperService';
@@ -506,7 +504,7 @@ const KnowMyOrg = () => {
       return;
     }
     
-    const newId = generateUUID();
+    const newId = crypto.randomUUID();
     const objective: ComplianceObjective = {
       id: newId,
       name: newObjective.name,

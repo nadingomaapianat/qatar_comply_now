@@ -14,7 +14,7 @@ import QCBComplianceGauges from '@/components/charts/QCBComplianceGauges';
 const PciDssQcb = () => {
   const breadcrumbItems = [
     { label: 'Qatar Home', href: '/' },
-    { label: 'Banking Sector', href: '/qatar/sector' },
+    { label: 'Financial Sector', href: '/qatar/sector' },
     { label: 'PCI-DSS & QCB' },
   ];
 

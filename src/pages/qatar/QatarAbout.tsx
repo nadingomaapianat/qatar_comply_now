@@ -9,7 +9,8 @@ import { Users, Target, Award, Globe, Shield, Zap } from 'lucide-react';
 
 const QatarAbout = () => {
   const breadcrumbItems = [
-    { label: 'Qatar Home', href: '/' },
+    { label: 'All Regions', href: '/hub' },
+    { label: 'Qatar', href: '/qatar' },
     { label: 'About' },
   ];
 
@@ -37,8 +38,10 @@ const QatarAbout = () => {
   ];
 
   const team = [
-    { name: 'Sherif Shaalan', role: 'Founder, CEO', expertise: 'Banking Compliance', country: '🇪🇬 Egypt', affiliations: 'Nexia International • Oracle' },
-    { name: 'Ahmed Halwany', role: 'COO', expertise: 'Operations & Strategy', country: '🇪🇬 Egypt', affiliations: 'Nexia International • Deloitte' }
+    { name: 'Mohammed Al-Thani', role: 'Regional Director', expertise: 'Qatar Compliance' },
+    { name: 'Sara Al-Mansouri', role: 'Head of Operations', expertise: 'QCB Regulations' },
+    { name: 'Ahmed Hassan', role: 'Technical Lead', expertise: 'Security Frameworks' },
+    { name: 'Fatima Al-Dosari', role: 'Client Success', expertise: 'Implementation' }
   ];
 
   return (
@@ -124,21 +127,20 @@ const QatarAbout = () => {
         <AnimatedSection variant="light" className="py-20">
           <div className="section-container">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Leadership Team</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Qatar Team</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Experienced professionals dedicated to your compliance success
               </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {team.map((member, index) => (
-                <div key={index} className="card-light p-6 rounded-2xl text-center relative">
-                  <span className="absolute top-4 right-4 text-lg" aria-hidden>{member.country}</span>
+                <div key={index} className="card-light p-6 rounded-2xl text-center">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-4 flex items-center justify-center">
                     <Users className="w-10 h-10 text-white" />
                   </div>
-                  <p className="bg-primary/90 text-primary-foreground font-medium text-sm px-3 py-1.5 rounded-lg inline-block mb-2">{member.role}</p>
-                  <h3 className="text-lg font-semibold text-foreground">{member.name}</h3>
-                  <p className="text-muted-foreground text-xs mt-2 px-3 py-1.5 rounded-full bg-muted/50 inline-block">{member.affiliations}</p>
+                  <h3 className="text-lg font-semibold">{member.name}</h3>
+                  <p className="text-primary font-medium text-sm">{member.role}</p>
+                  <p className="text-muted-foreground text-sm mt-1">{member.expertise}</p>
                 </div>
               ))}
             </div>

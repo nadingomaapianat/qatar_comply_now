@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Shield, FileCheck, BarChart3, ArrowRight } from 'lucide-react';
+import { Shield, Lock, Database, Leaf, BarChart3, FileCheck, ArrowRight } from 'lucide-react';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,48 +10,61 @@ import GlassCard from '@/components/GlassCard';
 const QatarSector = () => {
   const breadcrumbItems = [
     { label: 'Qatar Home', href: '/' },
-    { label: 'Banking Sector' },
+    { label: 'Financial Sector' },
   ];
 
   const pillars = [
     {
-      icon: FileCheck,
-      title: "NIA & ISO 27K Certification",
-      description: "Keep certification on track with evidence and controls in one place, always ready for audits.",
+      icon: Shield,
+      title: "Operational Resilience & Internal Controls",
+      description: "Achieve continuous compliance with QCB expectations. Maintain risk register, SOA, and internal control reporting in one place.",
       features: [
-        "Centralized evidence repository",
-        "Control mapping to ISO 27001",
-        "Audit preparation workflows",
-        "NIA compliance tracking"
+        "QCB internal control expectations",
+        "Dynamic risk register & SOA",
+        "Control effectiveness tracking",
+        "Board and regulatory reporting"
+      ],
+      ctaText: "Explore Risk & Controls",
+      ctaLink: "/qatar/risk-registry-soa"
+    },
+    {
+      icon: Lock,
+      title: "Cybersecurity & Digital Resilience",
+      description: "Align with NCSA's National Information Assurance (NIA) Standard and ISO 27001 for a mature security posture.",
+      features: [
+        "NCSA NIA Standard compliance",
+        "ISO 27001 certification support",
+        "Maturity assessment",
+        "Audit-ready evidence repository"
       ],
       ctaText: "Explore NIA & ISO 27K",
       ctaLink: "/qatar/nia-iso27k"
     },
     {
-      icon: BarChart3,
-      title: "Risk Registry & SOA",
-      description: "Central risk register and Statement of Applicability that stay up to date with controls and compliance status.",
+      icon: Database,
+      title: "Data Protection & Privacy",
+      description: "Qatar PDPPL (Law 13/2016) and QFC Data Protection compliance for banks. Oversight by National Cyber Governance and Assurance Affairs.",
       features: [
-        "Dynamic risk register",
-        "Auto-updated SOA",
-        "Control effectiveness tracking",
-        "Gap analysis reporting"
+        "PDPPL (Law 13/2016) & QFC regime",
+        "DPO dashboard & ROPA",
+        "Consent management",
+        "Cross-border transfer oversight"
       ],
-      ctaText: "Explore Risk Registry",
-      ctaLink: "/qatar/risk-registry-soa"
+      ctaText: "Explore Data Protection",
+      ctaLink: "/qatar/data-protection"
     },
     {
-      icon: Shield,
-      title: "PCI-DSS & QCB Requirements",
-      description: "Align with Qatar Central Bank expectations and PCI-DSS in a single workflow.",
+      icon: Leaf,
+      title: "Sustainability & ESG Reporting",
+      description: "QCB ESG & Sustainability Strategy (2024) and Sustainable Finance Framework. ISSB reporting from 2026.",
       features: [
-        "QCB regulatory mapping",
-        "PCI-DSS v4.0 controls",
-        "Unified compliance dashboard",
-        "Regulatory reporting"
+        "QCB Sustainable Finance Framework",
+        "ISSB (IFRS S1 & S2) reporting from 2026",
+        "ESG risk integration",
+        "Carbon and climate risk analysis"
       ],
-      ctaText: "Explore PCI-DSS & QCB",
-      ctaLink: "/qatar/pci-dss-qcb"
+      ctaText: "Explore Sustainability",
+      ctaLink: "/qatar/sustainability"
     }
   ];
 
@@ -71,11 +84,11 @@ const QatarSector = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-up">
-              Qatar Financial{' '}
+              Financial Sector{' '}
               <span className="gradient-text">Compliance Solutions</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground animate-fade-up-delay-1">
-              Navigate the three critical pillars of Qatar financial compliance with confidence
+              Navigate the four critical pillars of Qatar financial sector compliance with confidence
             </p>
           </div>
         </div>
@@ -84,7 +97,7 @@ const QatarSector = () => {
       {/* Navigation Cards Section */}
       <section className="py-16">
         <div className="section-container">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {pillars.map((pillar, index) => (
               <div key={index} className="animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <PillarCard {...pillar} />
@@ -104,13 +117,13 @@ const QatarSector = () => {
             <p className="text-muted-foreground leading-relaxed text-lg">
               Qatar's financial sector operates under stringent regulatory oversight from the 
               Qatar Central Bank (QCB) and the Qatar Financial Centre Regulatory Authority (QFCRA). 
-              Financial institutions must maintain ISO 27001 certification, comply with PCI-DSS 
-              for payment security, and align with the National Information Assurance (NIA) framework.
+              The four critical pillars—Operational Resilience & Internal Controls, Cybersecurity & Digital Resilience, 
+              Data Protection & Privacy, and Sustainability & ESG—are no longer siloed.
             </p>
             <p className="text-muted-foreground leading-relaxed text-lg mt-4">
-              These requirements form an <span className="text-foreground font-medium">interconnected compliance ecosystem</span> where 
-              maintaining certification, managing risks, and meeting QCB expectations all depend on each other. 
-              comply.now provides the unified infrastructure to manage all three pillars seamlessly.
+              They form an <span className="text-foreground font-medium">interconnected web of compliance</span> where 
+              failure in one domain can affect others. comply.now provides the 
+              unified infrastructure to manage all four pillars seamlessly.
             </p>
           </GlassCard>
         </div>
