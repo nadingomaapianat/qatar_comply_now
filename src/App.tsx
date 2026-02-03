@@ -43,7 +43,7 @@ const App = () => (
         <Routes>
             <Route path="/" element={<QatarHome />} />
             <Route path="/auth/register" element={<Registration />} />
-            <Route path="/login" element={<Login />} />
+           
             <Route path="/verifyemail" element={<VerifyEmailPage />} />
             <Route path="/checkSteps" element={<RegisterStatusPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
