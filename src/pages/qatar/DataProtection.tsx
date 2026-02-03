@@ -269,8 +269,8 @@ const DataProtection = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/qatar/contact" className="btn-gradient px-8 py-4 rounded-xl text-white font-semibold flex items-center gap-2 group">
-                Request Compliance Assessment
+              <Link to="/auth/register" className="btn-gradient px-8 py-4 rounded-xl text-white font-semibold flex items-center gap-2 group">
+                Start Your Assessment
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
