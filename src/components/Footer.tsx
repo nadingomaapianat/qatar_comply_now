@@ -26,6 +26,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/qatar/partners" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Partners
+                </Link>
+              </li>
+              <li>
                 <Link to="/qatar/nia-iso27k" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   NIA & ISO 27K
                 </Link>

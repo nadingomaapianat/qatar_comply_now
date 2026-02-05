@@ -18,6 +18,8 @@ import RiskRegistrySoa from "./pages/qatar/RiskRegistrySoa";
 import PciDssQcb from "./pages/qatar/PciDssQcb";
 import DataProtection from "./pages/qatar/DataProtection";
 import Sustainability from "./pages/qatar/Sustainability";
+import Partners from "./pages/qatar/Partners";
+import PartnerJoin from "./pages/qatar/PartnerJoin";
 
 // Auth & app pages
 import Registration from "./pages/auth/Registration/Registration";
@@ -63,6 +65,8 @@ const App = () => (
             <Route path="/qatar/pci-dss-qcb" element={<PciDssQcb />} />
             <Route path="/qatar/data-protection" element={<DataProtection />} />
             <Route path="/qatar/sustainability" element={<Sustainability />} />
+            <Route path="/qatar/partners" element={<Partners />} />
+            <Route path="/qatar/partners/join" element={<PartnerJoin />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
