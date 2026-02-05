@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
@@ -40,18 +41,27 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
   showHeader = true,
   className = ''
 }) => {
-  const { 
-    currentStep, 
-    stepNumber, 
-    goToStep, 
+  const {
+    token,
+    currentStep,
+    stepNumber,
+    goToStep,
     canGoToStep,
-    isRestoring 
+    clearRegistration,
+    isRestoring,
   } = useRegistration();
+  const navigate = useNavigate();
 
   const handleStepClick = (step: string) => {
     if (canGoToStep(step as any)) {
       goToStep(step as any);
     }
+  };
+
+  const handleLogout = () => {
+    // Clear registration state and auth token, then redirect to the registration landing page
+    clearRegistration();
+    navigate('/auth/register');
   };
 
   const isLanding = variant === 'landing';
@@ -102,7 +112,7 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
       {(showStepper && currentStep) || (isLanding && !showHeader) ? (
         <div className={`relative z-10 ${isLanding ? 'glass border-b border-border' : 'bg-white border-b border-gray-100'}`}>
           <div className="container mx-auto px-4 sm:px-6 py-3">
-            <div className="flex items-center max-w-6xl mx-auto">
+            <div className="flex items-center justify-between max-w-6xl mx-auto gap-4">
               <div className="shrink-0 pl-5">
                 <Logo className="h-20 w-auto sm:h-24 md:h-28 lg:h-32" />
               </div>
@@ -114,6 +124,19 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
                     variant={isLanding ? 'dark' : 'default'}
                     className="w-full max-w-4xl"
                   />
+                </div>
+              )}
+              {token && (
+                <div className="shrink-0 pr-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLogout}
+                    className={isLanding ? 'border-border text-foreground hover:bg-muted' : ''}
+                  >
+                    Logout
+                  </Button>
                 </div>
               )}
             </div>
