@@ -135,35 +135,33 @@ export const StepperLayout: React.FC<StepperLayoutProps> = ({
               {children}
             </div>
 
-            <div className="flex items-center justify-between mt-4 shrink-0">
-              <div className="flex-1">
-                {onPrevious && (
-                  <Button
-                    variant="outline"
-                    onClick={onPrevious}
-                    className={isLanding ? 'flex items-center space-x-2 border-border text-foreground hover:bg-muted' : 'flex items-center space-x-2'}
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>{previousLabel}</span>
-                  </Button>
-                )}
-              </div>
-              <div className="flex-1 flex justify-end">
-                {onNext && (
-                  <Button
-                    onClick={onNext}
-                    disabled={isNextDisabled || isNextLoading}
-                    className={isLanding ? 'flex items-center space-x-2 btn-gradient text-white' : 'flex items-center space-x-2 bg-[#14B8A6] hover:bg-[#0d9488] text-white'}
-                  >
-                    {isNextLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4" />
-                    )}
-                    <span>{nextLabel}</span>
-                  </Button>
-                )}
-              </div>
+            <div className="flex items-center justify-between gap-3 mt-4 shrink-0">
+              {onPrevious && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onPrevious}
+                  className={isLanding ? 'flex items-center space-x-2 border-border text-foreground hover:bg-muted' : 'flex items-center space-x-2'}
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>{previousLabel}</span>
+                </Button>
+              )}
+              {onNext && (
+                <Button
+                  type="button"
+                  onClick={onNext}
+                  disabled={isNextDisabled || isNextLoading}
+                  className={isLanding ? 'flex items-center space-x-2 btn-gradient text-white' : 'flex items-center space-x-2 bg-[#14B8A6] hover:bg-[#0d9488] text-white'}
+                >
+                  {isNextLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <ArrowRight className="w-4 h-4" />
+                  )}
+                  <span>{nextLabel}</span>
+                </Button>
+              )}
             </div>
           </div>
         </div>

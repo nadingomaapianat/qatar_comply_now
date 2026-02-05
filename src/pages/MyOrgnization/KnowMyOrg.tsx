@@ -1250,9 +1250,10 @@ const KnowMyOrg = () => {
             </div>
           </div>
 
-          <div className="p-3 space-y-2.5 flex-1 min-h-0 overflow-y-auto">
+          <div className="p-3 flex-1 min-h-0 overflow-y-auto">
             {businessObjectives.length > 0 ? (
-              businessObjectives.map((objective: any) => {
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {businessObjectives.map((objective: any) => {
                 const isSelected = selectedBusinessObjectives.has(objective.id);
                 return (
                   <label
@@ -1327,17 +1328,20 @@ const KnowMyOrg = () => {
                             <div>
                               <p className="font-medium text-muted-foreground mb-0.5">Applicable frameworks</p>
                               <div className="space-y-1">
-                                {objective.applicable_compliance_frameworks.map((fw: any, idx: number) => (
-                                  <div key={idx} className="flex gap-2">
-                                    <CheckCircle className="h-3 w-3 shrink-0 text-accent mt-0.5" />
-                                    <div>
-                                      <span className="font-medium text-foreground">{fw.id}</span>
-                                      {fw.alignment_reason && (
-                                        <span className="text-muted-foreground"> — {fw.alignment_reason}</span>
-                                      )}
+                                {objective.applicable_compliance_frameworks.map((fw: any, idx: number) => {
+                                  const label = fw.name || fw.alignment_reason || 'Applicable framework';
+                                  return (
+                                    <div key={idx} className="flex gap-2">
+                                      <CheckCircle className="h-3 w-3 shrink-0 text-accent mt-0.5" />
+                                      <div>
+                                        <span className="font-medium text-foreground">{label}</span>
+                                        {fw.alignment_reason && fw.name && (
+                                          <span className="text-muted-foreground"> — {fw.alignment_reason}</span>
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  );
+                                })}
                               </div>
                             </div>
                           )}
@@ -1346,7 +1350,8 @@ const KnowMyOrg = () => {
                     </div>
                   </label>
                 );
-              })
+              })}
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 py-8 text-center">
                 <Target className="h-10 w-10 text-muted-foreground mb-2" />

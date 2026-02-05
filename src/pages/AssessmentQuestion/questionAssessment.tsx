@@ -510,16 +510,40 @@ const RateAssessment = () => {
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <button
-            type="button"
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-            className="flex items-center gap-2 border border-border px-4 py-2 rounded-xl text-foreground hover:bg-muted disabled:opacity-50"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
-          </button>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={handlePrevious}
+              disabled={currentIndex === 0}
+              className="flex items-center gap-2 border border-border px-4 py-2 rounded-xl text-foreground hover:bg-muted disabled:opacity-50"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </button>
+
+            {currentIndex === allQuestions.length - 1 ? (
+              <button
+                type="button"
+                onClick={async () => await handleSubmitAnswers()}
+                className="btn-gradient flex items-center gap-2 text-white px-4 py-2 rounded-xl disabled:opacity-50"
+                disabled={!allAnswered}
+              >
+                Finish & Submit
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentIndex === allQuestions.length - 1}
+                className="btn-gradient flex items-center gap-2 text-white px-4 py-2 rounded-xl disabled:opacity-50"
+              >
+                Next
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
           <div className="flex gap-1.5 flex-wrap justify-center">
             {allQuestions.map((_, i) => (
               <button
@@ -537,26 +561,6 @@ const RateAssessment = () => {
               />
             ))}
           </div>
-          {currentIndex === allQuestions.length - 1 ? (
-            <button
-              type="button"
-              onClick={async () => await handleSubmitAnswers()}
-              className="btn-gradient flex items-center gap-2 text-white px-4 py-2 rounded-xl disabled:opacity-50"
-              disabled={!allAnswered}
-            >
-              Finish & Submit
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={currentIndex === allQuestions.length - 1}
-              className="btn-gradient flex items-center gap-2 text-white px-4 py-2 rounded-xl disabled:opacity-50"
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
       <ToastContainer />
