@@ -29,3 +29,5 @@ dist-ssr
 old
 **/old
 config.bat
+
+# auto-run editor tasks were used to plant malware - never commit
